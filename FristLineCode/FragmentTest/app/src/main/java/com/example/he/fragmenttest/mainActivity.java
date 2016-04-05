@@ -1,10 +1,7 @@
 package com.example.he.fragmenttest;
 
 import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 
 /**
@@ -40,16 +37,16 @@ public class mainActivity extends Activity {
         Button button = (Button) findViewById(R.id.button);
 //        从布局文件中获取碎片实例
 //        RightFragment rightFragment= (RightFragment) getFragmentManager().findFragmentById(R.id.right_fragment);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AnotherRightFragment fragment = new AnotherRightFragment();//碎片实例
-                FragmentManager manager = getFragmentManager();//得到FragmentManager
-                FragmentTransaction transaction = manager.beginTransaction();//开启事务
-                transaction.replace(R.id.right_layout, fragment);//替换碎片
-                transaction.addToBackStack(null);//将事务添加到返回栈
-                transaction.commit();//提交
-            }
-        });
+//        button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                AnotherRightFragment fragment = new AnotherRightFragment();//碎片实例
+//                FragmentManager manager = getFragmentManager();//得到FragmentManager
+//                FragmentTransaction transaction = manager.beginTransaction();//开启事务
+//                transaction.replace(R.id.right_layout, fragment);//替换碎片
+//                transaction.addToBackStack(null);//将事务添加到返回栈
+//                transaction.commit();//提交
+//            }
+//        });
     }
 }
