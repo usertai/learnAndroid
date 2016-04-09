@@ -46,5 +46,6 @@ class netWorkChange extends BroadcastReceiver {
         } else {
             Toast.makeText(context, "网络未连接", Toast.LENGTH_SHORT).show();
         }
+        
     }
 }
