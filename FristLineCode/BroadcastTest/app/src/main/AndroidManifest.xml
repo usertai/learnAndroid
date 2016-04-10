@@ -26,6 +26,14 @@
 
         </receiver>
 
+        <receiver android:name=".MyBroadcastReceiver" >
+
+            <intent-filter android:priority="100">
+                <action android:name="my_broadcast" />
+            </intent-filter>
+
+        </receiver>
+
     </application>
 
 </manifest>
