@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 /**
+ * 登录界面，可将信息保存到SharedPreferences中
  * Created by he on 2016/4/10.
  */
 public class MainActivity extends BaseActivity {

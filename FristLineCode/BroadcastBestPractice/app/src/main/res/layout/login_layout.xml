@@ -32,6 +32,16 @@
     </TableRow>
 
     <TableRow>
+        <CheckBox android:id="@+id/remember_pass"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:layout_height="wrap_content"
+            android:text="保存密码"
+            android:textSize="15sp"
+            />
+    </TableRow>
+
+    <TableRow>
 
         <Button
             android:id="@+id/login"
