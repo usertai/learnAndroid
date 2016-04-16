@@ -6,8 +6,28 @@
 
     <Button
         android:id="@+id/create_database"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:text="create database"/>
+    <Button
+        android:id="@+id/add_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="add data"/>
+    <Button
+        android:id="@+id/up_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="up data"/>
+    <Button
+        android:id="@+id/delete_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="delete data"/>
+    <Button
+        android:id="@+id/select_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="select data"/>
+
 </LinearLayout>
