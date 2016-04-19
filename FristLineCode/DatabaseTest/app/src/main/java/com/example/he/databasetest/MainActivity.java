@@ -20,7 +20,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main_layout);
-        databaseHelper = new MyDatabaseHelper(this, "BookStore.db", null, 3);
+        databaseHelper = new MyDatabaseHelper(this, "BookStore.db", null, 2);
         //创建数据库
         Button createDatabase = (Button) findViewById(R.id.create_database);
         createDatabase.setOnClickListener(this);
