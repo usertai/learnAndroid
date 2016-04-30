@@ -37,6 +37,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         findViewById(R.id.stop_service).setOnClickListener(this);
         findViewById(R.id.bind_service).setOnClickListener(this);
         findViewById(R.id.unbind_service).setOnClickListener(this);
+        findViewById(R.id.start_intent_service).setOnClickListener(this);
 
 
     }
@@ -59,6 +60,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.unbind_service:
                 unbindService(connection);//解绑服务
+                break;
+            case R.id.start_intent_service:
+                Toast.makeText(this,"mainActivity thread id"+Thread.currentThread().getId(),Toast.LENGTH_SHORT).show();
+                Intent intentService =new  Intent(this,MyIntentService.class);
+                startService(intentService);
+                break;
         }
 
     }
