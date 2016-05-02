@@ -4,12 +4,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -50,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void run() {
                 HttpURLConnection connection = null;
                 try {
-                    URL url = new URL("http://www.baidu.com");
+                    URL url = new URL("http://10.0.2.2:8088/get_data.xml");
                     connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("GET");
                     connection.setConnectTimeout(8000);//设置连接超时秒数
@@ -62,12 +67,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     while ((line = reader.readLine()) != null) {
                         builder.append(line);
                     }
-                    Message message = new Message();
-                    message.what = SHOW_RESPONSE;
-                    message.obj = builder.toString();
-                    handler.sendMessage(message);
+                    String response = builder.toString();
+                    parseXMLWithPull(response);//解析数据
 
-                    //读取数据
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
@@ -79,5 +82,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }).start();
 
+    }
+
+    //解析XML
+    private void parseXMLWithPull(String xmlData) {
+        try {
+            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+            XmlPullParser pullParser = factory.newPullParser();
+            pullParser.setInput(new StringReader(xmlData));
+            int eventType = pullParser.getEventType();
+            String id = "";
+            String name = "";
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                String nodeNmae = pullParser.getName();
+                switch (eventType) {
+                    //开始解析某个结点
+                    case XmlPullParser.START_TAG:
+                        if ("id".equals(nodeNmae)) {
+                            id = pullParser.nextText();
+                        } else if ("name".equals(nodeNmae)) {
+                            name = pullParser.nextText();
+                        }
+                        break;
+                    //完成解析
+                    case XmlPullParser.END_TAG:
+                        if ("app".equals(nodeNmae)) {
+                            Log.i("MainActivity", "id is" + id);
+                            Log.i("MainActivity", "name is" + name);
+                        }
+                        break;
+                }
+                eventType=pullParser.next();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+
+        }
     }
 }
