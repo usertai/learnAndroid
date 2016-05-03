@@ -8,6 +8,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
@@ -17,6 +21,8 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import javax.xml.parsers.SAXParserFactory;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private final static int SHOW_RESPONSE = 0;
@@ -54,8 +60,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void run() {
                 HttpURLConnection connection = null;
+                HttpURLConnection jsonConnection = null;
                 try {
-                    URL url = new URL("http://10.0.2.2:8088/get_data.xml");
+                    URL url = new URL("http://10.0.2.2:8088/get_data.xml");//xml数据
                     connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("GET");
                     connection.setConnectTimeout(8000);//设置连接超时秒数
@@ -68,8 +75,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         builder.append(line);
                     }
                     String response = builder.toString();
-                    parseXMLWithPull(response);//解析数据
+//                    parseXMLWithPull(response);//pull解析数据
+                    parseXMLWithSAX(response);//SAX解析数据
 
+
+                    //解析JSON数据
+                    URL jsonUrl = new URL("http://10.0.2.2:8088/get_data.json");//json数据
+                    jsonConnection = (HttpURLConnection) jsonUrl.openConnection();
+                    jsonConnection.setRequestMethod("GET");
+                    InputStream inputStream2 = jsonConnection.getInputStream();
+                    BufferedReader reader2 = new BufferedReader(new InputStreamReader(inputStream2));
+                    StringBuilder builder2 = new StringBuilder();
+                    String line2 = null;
+                    while ((line2 = reader2.readLine()) != null) {
+                        builder2.append(line2);
+                    }
+                    String response2 = builder2.toString();
+                    parseJSONWithJSONObject(response2);
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -112,12 +134,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                         break;
                 }
-                eventType=pullParser.next();
+                eventType = pullParser.next();
             }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
 
+        }
+    }
+
+    private void parseXMLWithSAX(String xmlData) throws Exception {
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        XMLReader xmlReader = factory.newSAXParser().getXMLReader();
+        ContentHandler handler = new ContentHandler();
+        //将ContentHandler的实例设置到XMLReader中
+        xmlReader.setContentHandler(handler);
+        //开始执行解析
+        xmlReader.parse(new InputSource(new StringReader(xmlData)));
+    }
+
+    private void parseJSONWithJSONObject(String jsonData) {
+        try {
+            JSONArray jsonArray=new JSONArray(jsonData);
+            for (int i=0;i<jsonArray.length();i++){
+                JSONObject object=jsonArray.getJSONObject(i);
+                String id=object.getString("id");
+                String name=object.getString("name");
+                Log.i("MainActivity JSON","id is"+id);
+                Log.i("MainActivity JSON","name is"+name);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
