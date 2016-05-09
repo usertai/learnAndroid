@@ -15,6 +15,7 @@ import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 
 import java.util.List;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         mapView = (MapView) findViewById(R.id.map_view);
 
         baiduMap = mapView.getMap();
+        baiduMap.setMyLocationEnabled(true);
         manager = (LocationManager) getSystemService(LOCATION_SERVICE);
         List<String> list = manager.getProviders(true);
         if (list.contains(LocationManager.GPS_PROVIDER)) {
@@ -73,6 +75,12 @@ public class MainActivity extends AppCompatActivity {
             baiduMap.animateMapStatus(update);
             isFirstLocate = false;
         }
+        MyLocationData.Builder builder=new MyLocationData.Builder();
+        builder.latitude(location.getLatitude());
+        builder.longitude(location.getLongitude());
+        MyLocationData locationData=builder.build();
+        baiduMap.setMyLocationData(locationData);
+
     }
 
 
@@ -113,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        baiduMap.setMyLocationEnabled(false);//关闭显示功能
         mapView.onDestroy();
         if (manager != null) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
