@@ -18,8 +18,5 @@ public class BaseActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         ActivityCollector.removeActivity(this);
-
-        //动态注册
-        unregisterReceiver(new ForceOfflineReceiver());
     }
 }
