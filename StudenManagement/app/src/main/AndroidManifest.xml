@@ -18,6 +18,7 @@
 
         <activity android:name=".activity.admin_login_activity"></activity>
         <activity android:name=".activity.student_login_activity"></activity>
+        <activity android:name=".activity.admin_activity"></activity>
     </application>
 
 </manifest>

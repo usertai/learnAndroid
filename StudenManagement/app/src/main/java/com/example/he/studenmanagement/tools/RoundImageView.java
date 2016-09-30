@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import com.example.he.studenmanagement.R;
 
 /**
+ * 自定义圆形头像
  * Created by he on 2016/9/30.
  */
 public class RoundImageView extends ImageView {
