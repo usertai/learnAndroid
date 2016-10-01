@@ -19,6 +19,14 @@
         <activity android:name=".activity.admin_login_activity"></activity>
         <activity android:name=".activity.student_login_activity"></activity>
         <activity android:name=".activity.admin_activity"></activity>
+        <activity android:name=".activity.studentInfo_activity"></activity>
+
+
+        <receiver android:name=".tools.MyBroadcastBestPractice">
+            <intent-filter>
+                <action android:name="com.he.example.OfflineBradcast"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
