@@ -44,7 +44,9 @@ public class admin_activity extends Activity {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(admin_activity.this, addStudent_info_activity.class);
+                intent.putExtra("haveData","false");
+                startActivity(intent);
             }
         });
 

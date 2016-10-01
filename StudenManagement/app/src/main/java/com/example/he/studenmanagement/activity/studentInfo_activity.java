@@ -3,6 +3,7 @@ package com.example.he.studenmanagement.activity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -107,10 +108,19 @@ public class studentInfo_activity extends Activity {
                     @Override
                     public void onClick(View v) {
                         //跳转到添加学生信息的界面,通过intent传递数据
-
+                        Intent intent = new Intent(studentInfo_activity.this, addStudent_info_activity.class);
+                        intent.putExtra("haveData", "true");
+                        intent.putExtra("name", student.getName());
+                        intent.putExtra("sex", student.getSex());
+                        intent.putExtra("id", student.getId());
+                        intent.putExtra("number", student.getNumber());
+                        intent.putExtra("password", student.getPassword());
+                        intent.putExtra("mathScore", student.getMathScore());
+                        intent.putExtra("chineseScore", student.getChineseScore());
+                        intent.putExtra("englishScore", student.getEnglishScore());
+                        startActivity(intent);
                     }
                 });
-
 
                 builder.create().show();
             }

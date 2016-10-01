@@ -18,13 +18,15 @@
 
         <activity android:name=".activity.admin_login_activity"></activity>
         <activity android:name=".activity.student_login_activity"></activity>
-        <activity android:name=".activity.admin_activity"></activity>
+        <activity
+            android:name=".activity.admin_activity"
+            android:launchMode="singleTask"></activity>
         <activity android:name=".activity.studentInfo_activity"></activity>
-
+        <activity android:name=".activity.addStudent_info_activity"></activity>
 
         <receiver android:name=".tools.MyBroadcastBestPractice">
             <intent-filter>
-                <action android:name="com.he.example.OfflineBradcast"/>
+                <action android:name="com.he.example.OfflineBradcast" />
             </intent-filter>
         </receiver>
     </application>
