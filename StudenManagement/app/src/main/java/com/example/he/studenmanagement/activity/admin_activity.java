@@ -54,7 +54,8 @@ public class admin_activity extends Activity {
         order.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent=new Intent(admin_activity.this,student_total_score.class);
+                startActivity(intent);
             }
         });
 

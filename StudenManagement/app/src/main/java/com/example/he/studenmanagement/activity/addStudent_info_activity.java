@@ -62,9 +62,24 @@ public class addStudent_info_activity extends Activity {
 
     }
 
+    //恢复旧数据
     private void initInfo() {
         String oldName = oldData.getStringExtra("name");
         name.setText(oldName);
+        String oldSex = oldData.getStringExtra("sex");
+        sex.setText(oldSex);
+        String oldId = oldData.getStringExtra("id");
+        id.setText(oldId);
+        String oldNumber = oldData.getStringExtra("number");
+        number.setText(oldNumber);
+        String oldPassword = oldData.getStringExtra("password");
+        password.setText(oldPassword);
+        int mathScore = oldData.getIntExtra("mathScore", 0);
+        math.setText(String.valueOf(mathScore));
+        int chineseScore = oldData.getIntExtra("chineseScore", 0);
+        chinese.setText(String.valueOf(chineseScore));
+        int englishScore = oldData.getIntExtra("englishScore", 0);
+        englise.setText(String.valueOf(englishScore));
     }
 
 
