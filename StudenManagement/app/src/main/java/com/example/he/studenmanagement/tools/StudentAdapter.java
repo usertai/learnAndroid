@@ -52,7 +52,7 @@ public class StudentAdapter extends ArrayAdapter<Student> {
         if (sex.equals("男")) {
             viewHolder.student_image.setImageResource(R.drawable.man);
 
-        } else {
+        } else if (sex.equals("女")) {
             viewHolder.student_image.setImageResource(R.drawable.woman);
         }
 

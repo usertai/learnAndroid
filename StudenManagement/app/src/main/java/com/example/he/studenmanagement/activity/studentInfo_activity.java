@@ -29,7 +29,8 @@ import java.util.List;
 public class studentInfo_activity extends Activity {
     private List<Student> studentList = new ArrayList<Student>();
     private myDatabaseHelper dbHelper;
-
+    private ListView listView;
+    private StudentAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,14 +39,15 @@ public class studentInfo_activity extends Activity {
         setContentView(R.layout.studentinfo_activity_layout);
         dbHelper = myDatabaseHelper.getInstance(this);
         initStudent();//从数据库中检索所有学生信息
-        StudentAdapter adapter = new StudentAdapter(studentInfo_activity.this, R.layout.student_item, studentList);
-        ListView listView = (ListView) findViewById(R.id.list_view);
+        adapter = new StudentAdapter(studentInfo_activity.this, R.layout.student_item, studentList);
+        listView = (ListView) findViewById(R.id.list_view);
         listView.setAdapter(adapter);
+
 
         //listView点击事件
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 final Student student = studentList.get(position);//捕获学生实例
                 AlertDialog.Builder builder = new AlertDialog.Builder(studentInfo_activity.this);
                 LayoutInflater factory = LayoutInflater.from(studentInfo_activity.this);
@@ -87,18 +89,15 @@ public class studentInfo_activity extends Activity {
                         AlertDialog.Builder delete_builder = new AlertDialog.Builder(studentInfo_activity.this);
                         delete_builder.setTitle("警告！！！！");
                         delete_builder.setMessage("您将删除该学生信息，此操作不可逆，请谨慎操作！");
-                        delete_builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
 
-                            }
-                        });
-
+                        delete_builder.setNegativeButton("取消", null);
                         delete_builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                //填写删除学生信息的相关逻辑
-
+                                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                                db.execSQL("delete from student where id=?", new String[]{student.getId()});
+                                studentList.remove(position);//移除
+                                adapter.notifyDataSetChanged();//刷新列表
 
                             }
                         });
@@ -131,14 +130,12 @@ public class studentInfo_activity extends Activity {
             }
         });
 
-
     }
-
 
     //初始化学生信息
     private void initStudent() {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        Cursor cursor = db.rawQuery("select * from student", null);
+        Cursor cursor = db.rawQuery("select * from student order by id", null);
         while (cursor.moveToNext()) {
             String id = cursor.getString(cursor.getColumnIndex("id"));
             String name = cursor.getString(cursor.getColumnIndex("name"));
