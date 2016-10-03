@@ -67,7 +67,6 @@ public class student_activity extends Activity {
                     }
                 });
 
-
                 builder.create().show();
             }
         });

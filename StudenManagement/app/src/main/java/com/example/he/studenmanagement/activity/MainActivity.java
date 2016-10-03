@@ -10,17 +10,19 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.he.studenmanagement.R;
+import com.example.he.studenmanagement.tools.myDatabaseHelper;
 
 ;
 
 /**
- * 登录主界面
+ * 登录主界面,在主界面就先把数据库中的表建好
  */
 
 public class MainActivity extends Activity {
     private long exit_time;//用于实现按两次back退出
     private Button admin;
     private Button student;
+    private myDatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         admin = (Button) findViewById(R.id.main_activity_admin);
         student = (Button) findViewById(R.id.main_activity_student);
+        dbHelper=myDatabaseHelper.getInstance(this);
+        dbHelper.getWritableDatabase();
 
         //跳转到管理员登录界面
         admin.setOnClickListener(new View.OnClickListener() {

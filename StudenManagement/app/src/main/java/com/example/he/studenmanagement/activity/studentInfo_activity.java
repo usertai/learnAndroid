@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,7 @@ import android.widget.ListView;
 import com.example.he.studenmanagement.R;
 import com.example.he.studenmanagement.tools.Student;
 import com.example.he.studenmanagement.tools.StudentAdapter;
+import com.example.he.studenmanagement.tools.myDatabaseHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +28,7 @@ import java.util.List;
  */
 public class studentInfo_activity extends Activity {
     private List<Student> studentList = new ArrayList<Student>();
+    private myDatabaseHelper dbHelper;
 
 
     @Override
@@ -32,7 +36,8 @@ public class studentInfo_activity extends Activity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.studentinfo_activity_layout);
-        initStudent();
+        dbHelper = myDatabaseHelper.getInstance(this);
+        initStudent();//从数据库中检索所有学生信息
         StudentAdapter adapter = new StudentAdapter(studentInfo_activity.this, R.layout.student_item, studentList);
         ListView listView = (ListView) findViewById(R.id.list_view);
         listView.setAdapter(adapter);
@@ -132,14 +137,20 @@ public class studentInfo_activity extends Activity {
 
     //初始化学生信息
     private void initStudent() {
-        studentList.add(new Student(11, 12, "201311054", 13, "A", "18895333", "123456", "男"));
-        studentList.add(new Student(11, 12, "201311054", 13, "A", "18895333", "123456", "男"));
-        studentList.add(new Student(11, 12, "201311054", 13, "A", "18895333", "123456", "女"));
-        studentList.add(new Student(11, 12, "201311054", 13, "A", "18895333", "123456", "男"));
-        studentList.add(new Student(11, 12, "201311054", 13, "A", "18895333", "123456", "女"));
-        studentList.add(new Student(11, 12, "201311054", 13, "A", "18895333", "123456", "男"));
-        studentList.add(new Student(11, 12, "201311054", 13, "A", "18895333", "123456", "女"));
-        studentList.add(new Student(11, 12, "201311054", 13, "A", "18895333", "123456", "男"));
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        Cursor cursor = db.rawQuery("select * from student", null);
+        while (cursor.moveToNext()) {
+            String id = cursor.getString(cursor.getColumnIndex("id"));
+            String name = cursor.getString(cursor.getColumnIndex("name"));
+            String password = cursor.getString(cursor.getColumnIndex("password"));
+            String sex = cursor.getString(cursor.getColumnIndex("sex"));
+            String number = cursor.getString(cursor.getColumnIndex("number"));
+            int mathScore = cursor.getInt(cursor.getColumnIndex("mathScore"));
+            int chineseScore = cursor.getInt(cursor.getColumnIndex("chineseScore"));
+            int englishScore = cursor.getInt(cursor.getColumnIndex("englishScore"));
+            studentList.add(new Student(chineseScore, englishScore, id, mathScore, name, number, password, sex));
+        }
+        cursor.close();
 
 
     }
