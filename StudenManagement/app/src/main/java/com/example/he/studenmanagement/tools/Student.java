@@ -13,9 +13,10 @@ public class Student {
     private int MathScore;
     private int ChineseScore;
     private int EnglishScore;
+    private int order;//名次
 
 
-    public Student(int chineseScore, int englishScore, String id, int mathScore, String name, String number, String password, String sex) {
+    public Student(int chineseScore, int englishScore, String id, int mathScore, String name, String number, String password, String sex,int order) {
 
         this.id = id;
         this.name = name;
@@ -25,6 +26,7 @@ public class Student {
         ChineseScore = chineseScore;
         EnglishScore = englishScore;
         MathScore = mathScore;
+        this.order=order;
     }
 
 
@@ -59,4 +61,10 @@ public class Student {
     public String getSex() {
         return sex;
     }
+
+    public int getOrder() {
+        return order;
+    }
+
+
 }

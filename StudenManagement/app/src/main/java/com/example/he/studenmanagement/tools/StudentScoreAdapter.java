@@ -30,9 +30,11 @@ public class StudentScoreAdapter extends ArrayAdapter<Student> {
         if (convertView == null) {
             view = LayoutInflater.from(getContext()).inflate(resourceId, null);
             viewHolder = new ViewHolder();
+            viewHolder.student_order = (TextView) view.findViewById(R.id.student_score_order);
             viewHolder.student_name = (TextView) view.findViewById(R.id.student_score_name);
             viewHolder.student_id = (TextView) view.findViewById(R.id.student_score_id);
             viewHolder.student_total_score = (TextView) view.findViewById(R.id.student_score_total);
+
 
             view.setTag(viewHolder);
 
@@ -42,6 +44,8 @@ public class StudentScoreAdapter extends ArrayAdapter<Student> {
         }
 
 
+        int order = student.getOrder();
+        viewHolder.student_order.setText(String.valueOf(order));
         viewHolder.student_name.setText(student.getName());
         viewHolder.student_id.setText(student.getId());
         int sum = student.getChineseScore() + student.getEnglishScore() + student.getMathScore();
@@ -54,6 +58,7 @@ public class StudentScoreAdapter extends ArrayAdapter<Student> {
         TextView student_name;
         TextView student_id;
         TextView student_total_score;
+        TextView student_order;
 
     }
 }

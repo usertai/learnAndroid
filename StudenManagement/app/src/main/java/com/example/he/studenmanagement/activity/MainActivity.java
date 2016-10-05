@@ -31,7 +31,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         admin = (Button) findViewById(R.id.main_activity_admin);
         student = (Button) findViewById(R.id.main_activity_student);
-        dbHelper=myDatabaseHelper.getInstance(this);
+        dbHelper = myDatabaseHelper.getInstance(this);
         dbHelper.getWritableDatabase();
 
         //跳转到管理员登录界面

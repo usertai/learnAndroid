@@ -41,8 +41,10 @@ public class student_total_score extends Activity {
     //初始化数据
     private void initInfo() {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        Cursor cursor = db.rawQuery("select * from student order by mathScore+chineseScore+englishScore", null);
+        Cursor cursor = db.rawQuery("select * from student order by mathScore+chineseScore+englishScore desc", null);
+        int i = 0;
         while (cursor.moveToNext()) {
+            i++;
             String id = cursor.getString(cursor.getColumnIndex("id"));
             String name = cursor.getString(cursor.getColumnIndex("name"));
             String password = cursor.getString(cursor.getColumnIndex("password"));
@@ -51,10 +53,11 @@ public class student_total_score extends Activity {
             int mathScore = cursor.getInt(cursor.getColumnIndex("mathScore"));
             int chineseScore = cursor.getInt(cursor.getColumnIndex("chineseScore"));
             int englishScore = cursor.getInt(cursor.getColumnIndex("englishScore"));
-            list.add(new Student(chineseScore, englishScore, id, mathScore, name, number, password, sex));
+            db.execSQL("update  student set ranking=? where id=?",new String[]{String.valueOf(i),id});//将排名插入数据库
+            list.add(new Student(chineseScore, englishScore, id, mathScore, name, number, password, sex, i));
         }
         cursor.close();
-        
+
     }
 
 

@@ -23,20 +23,23 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_ADMIN);
         db.execSQL(CREATE_STUDENT);
+        db.execSQL("alter table student add  column ranking integer");
+    }
 
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            if(oldVersion==1){
+                db.execSQL("alter table student add  column ranking integer");
+            }
     }
 
     public static myDatabaseHelper getInstance(Context context) {
         if (instance == null) {
-            instance = new myDatabaseHelper(context, "StudentManagement.db", null, 1);
+            instance = new myDatabaseHelper(context, "StudentManagement.db", null, 2);
         }
         return instance;
 
     }
 
 
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-    }
 }

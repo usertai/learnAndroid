@@ -74,6 +74,7 @@ public class studentInfo_activity extends Activity {
                         sb.append("英语成绩：" + english + "\n");
                         int sum = math + chinese + english;//总成绩
                         sb.append("总成绩：" + sum + "\n");
+                        sb.append("排名："+student.getOrder()+"\n");
                         select_builder.setMessage(sb.toString());
                         select_builder.create().show();
 
@@ -145,7 +146,8 @@ public class studentInfo_activity extends Activity {
             int mathScore = cursor.getInt(cursor.getColumnIndex("mathScore"));
             int chineseScore = cursor.getInt(cursor.getColumnIndex("chineseScore"));
             int englishScore = cursor.getInt(cursor.getColumnIndex("englishScore"));
-            studentList.add(new Student(chineseScore, englishScore, id, mathScore, name, number, password, sex));
+            int order=cursor.getInt(cursor.getColumnIndex("ranking"));
+            studentList.add(new Student(chineseScore, englishScore, id, mathScore, name, number, password, sex,order));
         }
         cursor.close();
 

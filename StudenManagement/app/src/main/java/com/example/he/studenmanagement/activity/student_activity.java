@@ -57,6 +57,7 @@ public class student_activity extends Activity {
                     int mathScore = cursor.getInt(cursor.getColumnIndex("mathScore"));
                     int chineseScore = cursor.getInt(cursor.getColumnIndex("chineseScore"));
                     int englishScore = cursor.getInt(cursor.getColumnIndex("englishScore"));
+                    int ranking = cursor.getInt(cursor.getColumnIndex("ranking"));
 
                     sb.append("姓名：" + name + "\n");
                     sb.append("学号：" + id + "\n");
@@ -67,6 +68,7 @@ public class student_activity extends Activity {
                     sb.append("英语成绩：" + englishScore + "\n");
                     int sum = mathScore + chineseScore + englishScore;//总成绩
                     sb.append("总成绩：" + sum + "\n");
+                    sb.append("名次：" + ranking + "\n");
                 }
                 cursor.close();
                 builder.setMessage(sb.toString());
