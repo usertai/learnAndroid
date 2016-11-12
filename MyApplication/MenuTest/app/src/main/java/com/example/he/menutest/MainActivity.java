@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -53,38 +54,87 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+//    /**
+//     * 创建上下文菜单
+//     *
+//     * @param menu
+//     * @return
+//     */
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.options_menu, menu);
+//        menu.add(1, 1, 1, "新添加的菜单");
+//        return true;
+//    }
+//
+//    /**
+//     * 选择菜单响应事件
+//     *
+//     * @param item
+//     * @return
+//     */
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case R.id.options_1:
+//                Toast.makeText(this, "这是选择菜单1", Toast.LENGTH_SHORT).show();
+//                break;
+//            case R.id.options_2:
+//                Toast.makeText(this, "这是选择菜单2", Toast.LENGTH_SHORT).show();
+//                break;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
+
+
     /**
-     * 创建上下文菜单
-     *
+     * 创建子菜单
      * @param menu
      * @return
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.options_menu, menu);
-        menu.add(1, 1, 1, "新添加的菜单");
+        SubMenu file=menu.addSubMenu("文件");
+        SubMenu edit=menu.addSubMenu("编辑");
+
+        file.setHeaderTitle("文件操作");
+        file.add(1,1,1,"新建");
+        file.add(1,2,1,"保存");
+
+        edit.setHeaderTitle("编辑操作");
+        edit.add(2,1,1,"复制");
+        edit.add(2,2,1,"粘贴");
+
         return true;
     }
 
-    /**
-     * 选择菜单响应事件
-     *
-     * @param item
-     * @return
-     */
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.options_1:
-                Toast.makeText(this, "这是选择菜单1", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.options_2:
-                Toast.makeText(this, "这是选择菜单2", Toast.LENGTH_SHORT).show();
-                break;
+
+        if(item.getGroupId()==1){
+
+            switch (item.getItemId()){
+                case 1:
+                    Toast.makeText(this, "新建", Toast.LENGTH_SHORT).show();
+                    break;
+                case 2:
+                    Toast.makeText(this, "保存", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+
+        }else if(item.getGroupId()==2){
+            switch (item.getItemId()){
+                case 1:
+                    Toast.makeText(this, "复制", Toast.LENGTH_SHORT).show();
+                    break;
+                case 2:
+                    Toast.makeText(this, "粘贴", Toast.LENGTH_SHORT).show();
+                    break;
+            }
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     /**
      * 创建上下文菜单
@@ -105,6 +155,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * 内容菜单点击事件
+     * @param item
+     * @return
+     */
     @Override
     public boolean onContextItemSelected(MenuItem item) {
 
