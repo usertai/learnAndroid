@@ -36,7 +36,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button zh_1;
     private Button zh_2;
     private Button activity_b;
-
+    private Button layout_button;
+    private Button frame_button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         zh_1 = (Button) findViewById(R.id.zh_1);
         zh_2 = (Button) findViewById(R.id.zh_2);
         activity_b = (Button) findViewById(R.id.a_button);
+        layout_button= (Button) findViewById(R.id.layout_button);
+        frame_button= (Button) findViewById(R.id.frame_button);
 
         alpha.setOnClickListener(this);
         scale.setOnClickListener(this);
@@ -58,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         zh_1.setOnClickListener(this);
         zh_2.setOnClickListener(this);
         activity_b.setOnClickListener(this);
+        layout_button.setOnClickListener(this);
+        frame_button.setOnClickListener(this);
 
     }
 
@@ -66,27 +71,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Animation animation;
         switch (v.getId()) {
             case R.id.alpha_button:
+                imageView.setImageResource(R.mipmap.ic_launcher);
                 animation = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);
                 imageView.startAnimation(animation);
                 break;
             case R.id.scale_button:
+                imageView.setImageResource(R.mipmap.ic_launcher);
                 animation = AnimationUtils.loadAnimation(this, R.anim.scale_anim);
                 imageView.startAnimation(animation);
                 break;
             case R.id.translate_button:
+                imageView.setImageResource(R.mipmap.ic_launcher);
                 animation = AnimationUtils.loadAnimation(this, R.anim.translate_anim);
                 imageView.startAnimation(animation);
                 break;
             case R.id.rotate_button:
+                imageView.setImageResource(R.mipmap.ic_launcher);
                 animation = AnimationUtils.loadAnimation(this, R.anim.rotate_anim);
                 imageView.startAnimation(animation);
                 break;
             case R.id.zh_1:
+                imageView.setImageResource(R.mipmap.ic_launcher);
                 //组合动画,两种动画同时执行
                 animation = AnimationUtils.loadAnimation(this, R.anim.zh1_anim);
                 imageView.startAnimation(animation);
                 break;
             case R.id.zh_2:
+                imageView.setImageResource(R.mipmap.ic_launcher);
                 //组合动画2两种动画连续执行
                 animation = AnimationUtils.loadAnimation(this, R.anim.translate_anim);
                 imageView.startAnimation(animation);
@@ -117,6 +128,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 break;
 
+            case R.id.layout_button:
+                //界面动画
+                Intent intent2 = new Intent(MainActivity.this, SecondActivity.class);
+                startActivity(intent2);
+                break;
+
+            case R.id.frame_button:
+                //逐帧动画
+                imageView.setImageResource(R.drawable.frame_anim);
+                break;
         }
     }
 }
