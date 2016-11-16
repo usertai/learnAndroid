@@ -37,6 +37,22 @@
         android:text="带动画的button"
         android:textSize="10sp" />
 
+
+    <Button
+        android:id="@+id/value_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/anim_button"
+        android:textSize="10sp"
+        android:text="ValueAnimator"
+        android:layout_centerInParent="true"
+        />
+
+
+
+
+
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

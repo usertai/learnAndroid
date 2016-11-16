@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -21,7 +22,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private ImageView imageView;
     private Button button;
-
+    private Button value_anim_button;
     private int res[] = {R.id.imageView_a, R.id.imageView_b, R.id.imageView_c, R.id.imageView_d, R.id.imageView_e, R.id.imageView_f, R.id.imageView_g, R.id.imageView_h};//图片ID数组
     private List<ImageView> imageViewList;
 
@@ -34,8 +35,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         imageView = (ImageView) findViewById(R.id.image_);
         button = (Button) findViewById(R.id.button_);
+        value_anim_button = (Button) findViewById(R.id.value_button);
         imageView.setOnClickListener(this);
         button.setOnClickListener(this);
+        value_anim_button.setOnClickListener(this);
 
         imageViewList = new ArrayList<ImageView>();
 
@@ -143,6 +146,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.imageView_g:
                 break;
 
+            //ValueAnimator演示
+            case R.id.value_button:
+                //获取从1到100的数值
+                ValueAnimator valueAnimator=ValueAnimator.ofInt(1,100);
+                valueAnimator.setDuration(5000);//5s
+                valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        Integer value= (Integer) animation.getAnimatedValue();
+                        value_anim_button.setText(""+value);
+                        if(value==100)
+                            value_anim_button.setText("完毕");
+                    }
+                });
+                valueAnimator.start();
+                break;
 
         }
     }
@@ -163,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onAnimationEnd(Animator animation) {
                 //弹出动画结束后将flag变为true
-                flag=true;
+                flag = true;
                 super.onAnimationEnd(animation);
             }
         });
@@ -178,9 +197,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void closeAnim() {
         ObjectAnimator animator = null;
         for (int i = 1; i < res.length; i++) {
-            animator = ObjectAnimator.ofFloat(imageViewList.get(i), "translationY",  -N * i,anim_Y);
+            animator = ObjectAnimator.ofFloat(imageViewList.get(i), "translationY", -N * i, anim_Y);
             animator.setDuration(1000);
-            animator.setStartDelay(i*300);
+            animator.setStartDelay(i * 300);
             animator.start();
         }
 
