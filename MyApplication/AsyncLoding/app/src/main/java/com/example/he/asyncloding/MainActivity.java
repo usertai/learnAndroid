@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -50,12 +49,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         listView = (ListView) findViewById(R.id.lv);
-        bar= (ProgressBar) findViewById(R.id.progress_bar);
-        itemList = new ArrayList<ItemBean>();
-        adapter = new myAdapter(itemList, this);
-        listView.setAdapter(adapter);
-        task=new NewsAsyncTask();
+        bar = (ProgressBar) findViewById(R.id.progress_bar);
+        task = new NewsAsyncTask();
         task.execute(URL);
+//        listView.setOnScrollListener(adapter);
 
     }
 
@@ -70,16 +67,19 @@ public class MainActivity extends AppCompatActivity {
         protected List<ItemBean> doInBackground(String... params) {
             return getData(params[0]);
         }
-//
+
+        //
         @Override
         protected void onPostExecute(List<ItemBean> list) {
             super.onPostExecute(list);
             listView.setVisibility(View.VISIBLE);
             bar.setVisibility(View.GONE);
+
+            itemList = new ArrayList<ItemBean>();
             itemList.addAll(list);
-            Message message = new Message();
-            message.what = OK;
-            handler.sendMessageDelayed(message, 1000);
+            adapter = new myAdapter(itemList, MainActivity.this,listView);
+            listView.setAdapter(adapter);
+            handler.sendEmptyMessageDelayed(OK,1000);
 
         }
     }
@@ -122,8 +122,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        Log.i("size", "" + list.size());
         return list;
 
     }
