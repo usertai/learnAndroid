@@ -24,6 +24,7 @@ public class myAdapter extends BaseAdapter implements AbsListView.OnScrollListen
     private ListView listV;
     private int mStart, mEnd;
     private ImageLoader loader;
+    private boolean first;
 
 
     public static String imagePath[];//用于储存imageURL
@@ -33,6 +34,7 @@ public class myAdapter extends BaseAdapter implements AbsListView.OnScrollListen
         this.list = list;
         this.context = context;
         this.listV = listView;
+        first=true;
         loader = new ImageLoader(listV);
         imagePath = new String[list.size()];
         for (int i = 0; i < list.size(); i++) {
@@ -78,7 +80,6 @@ public class myAdapter extends BaseAdapter implements AbsListView.OnScrollListen
         //将每个图片与图片的url绑定,防止因为ListView的缓存造成的错位
         String urlTag = bean.getImageUrl();
         holder.image.setTag(urlTag);
-//        new ImageLoader().loadingImageByAsyncTask(holder.image,urlTag);
         loader.loadingImageByAsyncTask(holder.image, urlTag);
         holder.title.setText(bean.getTitle());
         holder.content.setText(bean.getContent());
@@ -102,6 +103,14 @@ public class myAdapter extends BaseAdapter implements AbsListView.OnScrollListen
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         mStart = firstVisibleItem;
         mEnd = firstVisibleItem + visibleItemCount;
+
+        //第一次显示的时候调用
+        if(first && visibleItemCount>0){
+            loader.loadImage(mStart, mEnd);
+            first=false;
+        }
+
+
     }
 
 
