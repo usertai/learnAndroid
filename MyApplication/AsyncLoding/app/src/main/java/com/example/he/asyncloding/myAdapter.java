@@ -5,10 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -17,7 +19,7 @@ import java.util.List;
  * Created by he on 2016/11/21.
  */
 
-public class myAdapter extends BaseAdapter implements AbsListView.OnScrollListener {
+public class myAdapter extends BaseAdapter implements AbsListView.OnScrollListener,AdapterView.OnItemClickListener {
 
     private List<ItemBean> list;
     private Context context;
@@ -25,22 +27,26 @@ public class myAdapter extends BaseAdapter implements AbsListView.OnScrollListen
     private int mStart, mEnd;
     private ImageLoader loader;
     private boolean first;
+    private MainActivity activity;
+
+//    public static String imagePath[];//用于储存imageURL
 
 
-    public static String imagePath[];//用于储存imageURL
 
-
-    public myAdapter(List<ItemBean> list, Context context, ListView listView) {
+    public myAdapter(List<ItemBean> list, Context context, ListView listView,MainActivity activity) {
         this.list = list;
         this.context = context;
         this.listV = listView;
+        this.activity=activity;
+
         first=true;
         loader = new ImageLoader(listV);
-        imagePath = new String[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            imagePath[i] = list.get(i).getImageUrl();
-        }
+//        imagePath = new String[list.size()];
+//        for (int i = 0; i < list.size(); i++) {
+//            imagePath[i] = list.get(i).getImageUrl();
+//        }
         listV.setOnScrollListener(this);
+        listV.setOnItemClickListener(this);
     }
 
     @Override
@@ -87,6 +93,11 @@ public class myAdapter extends BaseAdapter implements AbsListView.OnScrollListen
         return view;
     }
 
+    /**
+     * listView的滑动事件
+     * @param view
+     * @param scrollState
+     */
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
 
@@ -105,12 +116,25 @@ public class myAdapter extends BaseAdapter implements AbsListView.OnScrollListen
         mEnd = firstVisibleItem + visibleItemCount;
 
         //第一次显示的时候调用
-        if(first && visibleItemCount>0){
+        if(activity.isFirst() && visibleItemCount>0){
             loader.loadImage(mStart, mEnd);
-            first=false;
+            activity.setFirst(false);
         }
 
 
+    }
+
+    /**
+     * ListView的点击事件
+     * @param parent
+     * @param view
+     * @param position
+     * @param id
+     */
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        ItemBean bean= (ItemBean) listV.getItemAtPosition(position);
+        Toast.makeText(myApplication.getContext(),bean.getTitle(),Toast.LENGTH_SHORT).show();
     }
 
 

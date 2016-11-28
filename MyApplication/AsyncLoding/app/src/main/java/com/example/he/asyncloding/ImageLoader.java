@@ -60,8 +60,11 @@ public class ImageLoader {
      * @param end
      */
     public void loadImage(int start, int end) {
+
         for (int i = start; i < end; i++) {
-            String url = myAdapter.imagePath[i];
+            ItemBean bean= (ItemBean) mListView.getItemAtPosition(i);
+            String url=bean.getImageUrl();//通过itemBean获取URL,为下拉刷新服务
+//            String url = myAdapter.imagePath[i];
             Bitmap bitmap = imageCache.get(url);
             if (bitmap != null) {
                 //找到ImageView
