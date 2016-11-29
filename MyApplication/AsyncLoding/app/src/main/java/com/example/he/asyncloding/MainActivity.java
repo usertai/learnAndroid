@@ -31,7 +31,7 @@ import java.util.List;
 
 /**
  * 此项目包含的内容：1、ListView的item布局以及加载优化
- * 2、从网络中加载ListView的item（异步的方式）
+ * 2、从网络中加载ListView的item（异步的方式），使用LruCache缓存BitMap
  * 3、ListView的下拉刷新，刷新一次更新ListView中的数据（从网络中获取资源只有30条）
  * 4、ListView的点击事件,需要使用全局Context
  * 5、创建上下文菜单,长按ListView中的item弹出菜单选项
@@ -70,8 +70,17 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case OK:
+                    int i;
+                    int j = 0;
+                    //更新ListView中的数据，在这更新的原因是，如果在onRefresh()方法中更新，在刷新时滑动ListView程序会crash
+                    for (i = (tempIndex % tempArray.length); i < (tempIndex % tempArray.length) + tempArray.length / 2; i++) {
+                        itemList.set(j++, tempArray[i % tempArray.length]);
+                    }
+                    tempIndex = i;
+                    first = true;
                     adapter.notifyDataSetChanged();//更新数据
                     refreshLayout.setRefreshing(false);//隐藏刷新图标
+                    listView.setEnabled(true);
                     break;
             }
         }
@@ -82,7 +91,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         listView = (ListView) findViewById(R.id.lv);
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         refreshLayout.setOnRefreshListener(this);
@@ -119,20 +127,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
      */
     @Override
     public void onRefresh() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                int i;
-                int j = 0;
-                for (i = (tempIndex % tempArray.length); i < (tempIndex % tempArray.length) + tempArray.length / 2; i++) {
-                    itemList.set(j++, tempArray[i % tempArray.length]);
-                }
-                tempIndex = i;
-                first = true;
-                handler.sendEmptyMessageDelayed(OK, 2000);
-            }
-        }).start();
-
+        handler.sendEmptyMessageDelayed(OK, 2000);
     }
 
     class NewsAsyncTask extends AsyncTask<String, Void, List<ItemBean>> {
@@ -276,7 +271,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         return super.onContextItemSelected(item);
     }
-
 
 }
 

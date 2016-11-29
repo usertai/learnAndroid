@@ -19,7 +19,7 @@ import java.util.List;
  * Created by he on 2016/11/21.
  */
 
-public class myAdapter extends BaseAdapter implements AbsListView.OnScrollListener,AdapterView.OnItemClickListener {
+public class myAdapter extends BaseAdapter implements AbsListView.OnScrollListener, AdapterView.OnItemClickListener {
 
     private List<ItemBean> list;
     private Context context;
@@ -29,22 +29,16 @@ public class myAdapter extends BaseAdapter implements AbsListView.OnScrollListen
     private boolean first;
     private MainActivity activity;
 
-//    public static String imagePath[];//用于储存imageURL
 
 
-
-    public myAdapter(List<ItemBean> list, Context context, ListView listView,MainActivity activity) {
+    public myAdapter(List<ItemBean> list, Context context, ListView listView, MainActivity activity) {
         this.list = list;
         this.context = context;
         this.listV = listView;
-        this.activity=activity;
+        this.activity = activity;
 
-        first=true;
+        first = true;
         loader = new ImageLoader(listV);
-//        imagePath = new String[list.size()];
-//        for (int i = 0; i < list.size(); i++) {
-//            imagePath[i] = list.get(i).getImageUrl();
-//        }
         listV.setOnScrollListener(this);
         listV.setOnItemClickListener(this);
     }
@@ -93,14 +87,15 @@ public class myAdapter extends BaseAdapter implements AbsListView.OnScrollListen
         return view;
     }
 
+
     /**
      * listView的滑动事件
+     *
      * @param view
      * @param scrollState
      */
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-
         //当ListView滑动停止时，从网络中加载图片
         if (scrollState == SCROLL_STATE_IDLE) {
             loader.loadImage(mStart, mEnd);
@@ -114,18 +109,16 @@ public class myAdapter extends BaseAdapter implements AbsListView.OnScrollListen
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         mStart = firstVisibleItem;
         mEnd = firstVisibleItem + visibleItemCount;
-
         //第一次显示的时候调用
-        if(activity.isFirst() && visibleItemCount>0){
+        if (activity.isFirst() && visibleItemCount > 0) {
             loader.loadImage(mStart, mEnd);
             activity.setFirst(false);
         }
-
-
     }
 
     /**
      * ListView的点击事件
+     *
      * @param parent
      * @param view
      * @param position
@@ -133,8 +126,8 @@ public class myAdapter extends BaseAdapter implements AbsListView.OnScrollListen
      */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        ItemBean bean= (ItemBean) listV.getItemAtPosition(position);
-        Toast.makeText(myApplication.getContext(),bean.getTitle(),Toast.LENGTH_SHORT).show();
+        ItemBean bean = (ItemBean) listV.getItemAtPosition(position);
+        Toast.makeText(myApplication.getContext(), bean.getTitle(), Toast.LENGTH_SHORT).show();
     }
 
 
