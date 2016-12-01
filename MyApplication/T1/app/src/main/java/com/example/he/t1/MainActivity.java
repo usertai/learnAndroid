@@ -3,7 +3,10 @@ package com.example.he.t1;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
-import android.view.View;
+
+/**
+ * 一个随手指移动的ImageView
+ */
 
 public class MainActivity extends AppCompatActivity {
 
@@ -13,21 +16,26 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        image= (movingImage) findViewById(R.id.imageV);
-        image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.out.println("ccccc");
-            }
-        });
+        image = (movingImage) findViewById(R.id.imageV);
+        image.setClickable(true);
     }
 
+    /**
+     * 这样保证了只有按住图片拖动时图片才会动
+     * @param event
+     * @return
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        image.autoMouse(event);
-        return  false;
+        if (image.isPress())
+            image.autoMouse(event);
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_UP:
+                image.setPress(false);
+                break;
+        }
+        return false;
     }
-
 
 
 }

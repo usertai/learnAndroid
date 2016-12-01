@@ -9,7 +9,8 @@ import android.widget.ImageView;
  * Created by he on 2016/11/30.
  */
 
-public class movingImage extends ImageView {
+public class movingImage extends ImageView    {
+    private boolean press=false;
     public movingImage(Context context) {
         super(context);
     }
@@ -39,6 +40,22 @@ public class movingImage extends ImageView {
                 break;
         }
         return rb;
+    }
+
+
+    public void setPress(boolean press) {
+        this.press = press;
+    }
+
+    public boolean isPress() {
+        return press;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        press=true;
+//        autoMouse(event);
+        return false;
     }
 
 
