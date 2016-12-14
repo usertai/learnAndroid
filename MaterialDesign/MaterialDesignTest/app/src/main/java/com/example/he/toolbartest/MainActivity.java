@@ -8,11 +8,17 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * 基本上所有的控件都需要添加依赖
@@ -24,20 +30,39 @@ import android.widget.Toast;
  * 3、NavigationView
  * 使用NavigationView需要 menu（用于显示具体的菜单项） 和 headerLayout（显示头部布局）
  * 4、FloatingActionButton
- *   一个具有悬浮效果的Button,功能和普通button一样
+ * 一个具有悬浮效果的Button,功能和普通button一样
  * 5、Snackbar
- *      和Toast一样是提醒用户的一种工具，但是toast只能提醒用户发生了什么，不能交互
- *      SnackBar可以添加交互按钮
+ * 和Toast一样是提醒用户的一种工具，但是toast只能提醒用户发生了什么，不能交互
+ * SnackBar可以添加交互按钮
  * 6、CoordinatorLayout，见main.xml
- *      FrameLayout的加强版，普通情况下和FrameLayout的作用相同
- *      CoordinatorLayout可以监听其所有的子控件的各种事件，然后做出适当的响应
- *
+ * FrameLayout的加强版，普通情况下和FrameLayout的作用相同
+ * CoordinatorLayout可以监听其所有的子控件的各种事件，然后做出适当的响应
+ * 7、CardView
+ * 一种布局方式，实现了卡片式的布局效果，本质是一个FrameLayout,在fruit_item.xml中属于
+ * 8、RecyclerView
+ * ListView的升级版，增长逐步的代替ListView，使用的方法和ListView差不多
+ * 9、AppBarLayout
+ * 实际上是一个垂直的LinearLayout,内部做了很多滚动事件的封装，这里使用时为了解决recyclerView遮挡toolbar
  */
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
     private NavigationView navigationView;
     private FloatingActionButton actionButton;
+    private static Fruit[] mFruits;
+    private List<Fruit> fruitList = new ArrayList<Fruit>();
+    private RecyclerView recyclerView;
+    private FruitAdapter adapter;
+
+
+    static {
+        mFruits = new Fruit[]{new Fruit("Apple", R.drawable.apple), new Fruit("Banana", R.drawable.banana),
+                new Fruit("Orange", R.drawable.orange), new Fruit("Watermelon", R.drawable.watermelon),
+                new Fruit("Pear", R.drawable.pear), new Fruit("Grape", R.drawable.grape),
+                new Fruit("Pineapple", R.drawable.pineapple), new Fruit("Strawberry", R.drawable.strawberry),
+                new Fruit("Cherry", R.drawable.cherry), new Fruit("Mango", R.drawable.mango)};
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +72,15 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
-        actionButton= (FloatingActionButton) findViewById(R.id.fab);
+        actionButton = (FloatingActionButton) findViewById(R.id.fab);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_View);
+        adapter = new FruitAdapter(fruitList);
+        initFruit();
+        //设置recyclerView的显示布局
+        GridLayoutManager manager = new GridLayoutManager(this, 2);
+        recyclerView.setLayoutManager(manager);
+        recyclerView.setAdapter(adapter);
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             //在ActionBar中显示导航按钮
@@ -71,10 +104,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //setAction添加交互
-                Snackbar.make(v,"Snackbar显示的内容",Snackbar.LENGTH_SHORT).setAction("Undo", new View.OnClickListener() {
+                Snackbar.make(v, "Snackbar显示的内容", Snackbar.LENGTH_SHORT).setAction("Undo", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(MainActivity.this,"Snackbar中添加的交互",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Snackbar中添加的交互", Toast.LENGTH_SHORT).show();
                     }
                 }).show();
             }
@@ -121,4 +154,18 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
+
+
+    /**
+     * 初始化数据
+     */
+    private void initFruit() {
+        fruitList.clear();
+        Random random = new Random();
+        for (int i = 0; i < 50; i++) {
+            fruitList.add(mFruits[random.nextInt(mFruits.length)]);
+        }
+    }
+
+
 }
