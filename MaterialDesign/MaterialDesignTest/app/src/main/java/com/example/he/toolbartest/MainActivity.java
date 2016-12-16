@@ -6,6 +6,7 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 基本上所有的控件都需要添加依赖
@@ -41,10 +43,16 @@ import java.util.Random;
  * 一种布局方式，实现了卡片式的布局效果，本质是一个FrameLayout,在fruit_item.xml中属于
  * 8、RecyclerView
  * ListView的升级版，增长逐步的代替ListView，使用的方法和ListView差不多
- * 9、AppBarLayout
+ * ################
+ *  9、AppBarLayout,必须是CoordinatorLayout的子布局
  * 实际上是一个垂直的LinearLayout,内部做了很多滚动事件的封装，这里使用时为了解决recyclerView遮挡toolbar
+ * ################
+ * 10、CollapsingToolbarLayout 可折叠式标题栏 必须作为是AooBarLayout的直接子布局使用，不能单独使用
+ * ###############
+ * 11、SwipeRefreshLayout
+ * 官方提供的下拉刷新控件
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
     private NavigationView navigationView;
@@ -53,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private List<Fruit> fruitList = new ArrayList<Fruit>();
     private RecyclerView recyclerView;
     private FruitAdapter adapter;
+    private SwipeRefreshLayout refreshLayout;
 
 
     static {
@@ -74,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         actionButton = (FloatingActionButton) findViewById(R.id.fab);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_View);
+        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.SwipeRefresh);
         adapter = new FruitAdapter(fruitList);
         initFruit();
         //设置recyclerView的显示布局
@@ -113,6 +123,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        refreshLayout.setColorSchemeResources(R.color.colorPrimary);
+        refreshLayout.setOnRefreshListener(this);
     }
 
 
@@ -167,5 +179,33 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    public void onRefresh() {
+        refreshFruits();
+    }
+
+    private void refreshFruits() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    TimeUnit.SECONDS.sleep(2);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                //返回主线程
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        initFruit();
+                        adapter.notifyDataSetChanged();
+                        refreshLayout.setRefreshing(false);//隐藏刷新按钮
+                    }
+                });
+
+            }
+        }).start();
+    }
 
 }
