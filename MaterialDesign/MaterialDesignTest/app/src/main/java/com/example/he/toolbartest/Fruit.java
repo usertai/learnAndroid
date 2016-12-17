@@ -8,18 +8,18 @@ package com.example.he.toolbartest;
 public class Fruit {
 
     private String name;
-    private int nameId;
+    private int imageId;
 
     public Fruit(String name, int nameId) {
         this.name = name;
-        this.nameId = nameId;
+        this.imageId = nameId;
     }
 
     public String getName() {
         return name;
     }
 
-    public int getNameId() {
-        return nameId;
+    public int getImageId() {
+        return imageId;
     }
 }

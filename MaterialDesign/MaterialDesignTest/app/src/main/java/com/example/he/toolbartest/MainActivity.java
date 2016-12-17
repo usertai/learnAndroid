@@ -51,6 +51,7 @@ import java.util.concurrent.TimeUnit;
  * ###############
  * 11、SwipeRefreshLayout
  * 官方提供的下拉刷新控件
+ * 12、NestedScrollView，在ScrollView的基础上增加了嵌套响应滚动事件的功能
  */
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
     private DrawerLayout drawerLayout;

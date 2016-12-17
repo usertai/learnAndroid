@@ -1,6 +1,7 @@
 package com.example.he.toolbartest;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -38,9 +39,23 @@ public class FruitAdapter extends RecyclerView.Adapter<FruitAdapter.FruitHolder>
 
     @Override
     public void onBindViewHolder(FruitHolder holder, int position) {
-        Fruit fruit=mList.get(position);
+        final Fruit fruit=mList.get(position);
         holder.fruit_name.setText(fruit.getName());
-        Glide.with(mContext).load(fruit.getNameId()).into(holder.fruit_image);
+        Glide.with(mContext).load(fruit.getImageId()).into(holder.fruit_image);
+
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent=new Intent(mContext,fruit_activity.class);
+                intent.putExtra("fruit_name",fruit.getName());
+                intent.putExtra("fruit_imageId",fruit.getImageId());
+                mContext.startActivity(intent);
+            }
+        });
+
+
+
     }
 
     @Override
