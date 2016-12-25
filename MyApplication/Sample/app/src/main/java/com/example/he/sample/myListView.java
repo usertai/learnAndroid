@@ -8,10 +8,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.RotateAnimation;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Created by he on 2016/11/17.
@@ -25,7 +27,8 @@ enum State {
 }
 
 
-public class myListView extends ListView {
+public class myListView extends ListView implements AdapterView.OnItemClickListener {
+    private static final String TAG = "ListView";
 
     private View header;
     private int headerHeight;
@@ -38,6 +41,26 @@ public class myListView extends ListView {
     private TextView title;
     private ImageView image;
     private ProgressBar bar;
+
+    //下面的变量用于滑动删除
+    private int mLastX;
+    private int Max_Width = 100;//在布局中隐藏的 删除  宽度为100dp
+    private int maxLength;
+    private Context mContext;
+    private static myAdapter.ItemBean bean;//item的布局
+
+
+    /**
+     * 将dp转换为px
+     *
+     * @param context
+     * @param dip
+     * @return
+     */
+    private int dipToPx(Context context, int dip) {
+        return (int) (dip * context.getResources().getDisplayMetrics().density + 0.5f);
+    }
+
 
     public myListView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -61,6 +84,7 @@ public class myListView extends ListView {
      * @param context
      */
     private void initView(Context context) {
+        mContext = context;
         header = LayoutInflater.from(context).inflate(R.layout.head, null);
         title = (TextView) header.findViewById(R.id.tip);
         image = (ImageView) header.findViewById(R.id.refresh);
@@ -69,6 +93,7 @@ public class myListView extends ListView {
         headerHeight = header.getMeasuredHeight();//获取高度
         topPadding(-headerHeight);
         this.addHeaderView(header);
+//        this.setOnItemClickListener(this);
     }
 
     /**
@@ -85,17 +110,32 @@ public class myListView extends ListView {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
+        //下面的代码用于滑动删除
+        int x = (int) ev.getX();
+        int y = (int) ev.getY();
+        maxLength = dipToPx(mContext, Max_Width);
 
         switch (ev.getAction()) {
-            case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_DOWN: {
                 int t = this.getFirstVisiblePosition();
                 //t为0表示到达屏幕顶部
                 if (t == 0) {
                     top = true;
                     startY = (int) ev.getY();
                 }
+
+                //下面的代码用于滑动删除
+                int position = pointToPosition(x, y);
+//                getAdapter().getItem(position);
+//                Log.i(TAG, "onTouchEvent: " + position);
+                if (position != INVALID_POSITION) {
+                    bean = (myAdapter.ItemBean) getAdapter().getItem(position);
+                    Log.i(TAG, "onTouchEvent: "+bean.toString());
+                }
+
+            }
                 break;
-            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_UP: {
                 top = false;
                 firstState = true;
                 //在状态2时松手则切换到状态3的视图
@@ -104,20 +144,46 @@ public class myListView extends ListView {
                 //在状态1时松手则恢复原样
                 if (state == State.UN_PREPARE)
                     topPadding(-headerHeight);
-                break;
-            case MotionEvent.ACTION_MOVE:
+
+                //下面的代码用于滑动删除
+                int scrollX = bean.lin_root.getScrollX();
+                int newScrollX;
+                if (scrollX > maxLength / 2) {
+                    newScrollX = maxLength;
+                } else {
+                    newScrollX = 0;
+                }
+//                bean.lin_root.scrollTo(newScrollX, 0);
+                Log.i(TAG, "onTouchEvent: newScrollX "+bean.toString());
+                bean.lin_root.scrollTo(200, 0);
+            }
+            break;
+            case MotionEvent.ACTION_MOVE: {
                 if (top)
                     onMove(ev);
+                //下面的代码用于滑动删除
+                int scrollX = bean.lin_root.getScrollX();
+                int newScrollX = scrollX + mLastX - x;
+                if (newScrollX < 0) {
+                    newScrollX = 0;
+                } else if (newScrollX > maxLength) {
+                    newScrollX = maxLength;
+                }
+//                Log.i(TAG, "onTouchEvent: newScrollX ");
+                bean.lin_root.scrollTo(newScrollX, 0);
 
-                break;
+            }
+            break;
         }
-
+        mLastX = x;
         return super.onTouchEvent(ev);
     }
 
 
+
     /**
      * 手指正在滑动时进行状态判断
+     *
      * @param event
      */
     private void onMove(MotionEvent event) {
@@ -165,7 +231,7 @@ public class myListView extends ListView {
                  */
                 RotateAnimation animation = new RotateAnimation(0, 180, RotateAnimation.RELATIVE_TO_SELF, 0.5F, RotateAnimation.RELATIVE_TO_SELF, 0.5F);
                 animation.setDuration(0);//0毫秒内完成效果
-               animation.setFillAfter(true);//图片的显示为执行动画后的样子
+                animation.setFillAfter(true);//图片的显示为执行动画后的样子
                 image.startAnimation(animation);
                 title.setText("松手进行刷新");
 
@@ -185,8 +251,13 @@ public class myListView extends ListView {
     public int getHeaderHeight() {
         return headerHeight;
     }
+
     public State getState() {
         return state;
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Toast.makeText(mContext,bean.getTitle(),Toast.LENGTH_SHORT).show();
+    }
 }
