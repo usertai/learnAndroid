@@ -67,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initList() {
-        for (int i = 0; i < 50; i++) {
-            list.add(new myAdapter.ItemBean("Item"+random.nextInt(50-i)));
+        for (int i = 0; i < 15; i++) {
+            list.add(new myAdapter.ItemBean("Item"+random.nextInt(15-i)));
 
         }
 
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 message.what = OK;
 
                 for(int i=0;i<list.size();i++){
-                    list.set(i,new myAdapter.ItemBean("Item"+random.nextInt(50-i)));
+                    list.set(i,new myAdapter.ItemBean("Item"+random.nextInt(15-i)));
                 }
 
                 handler.sendMessageDelayed(message, 2000);//2s以后发送message

@@ -40,7 +40,7 @@ public class myAdapter extends BaseAdapter{
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View view;
         ViewHolder holder;
         ItemBean bean=mList.get(position);
@@ -54,6 +54,14 @@ public class myAdapter extends BaseAdapter{
             holder= (ViewHolder) view.getTag();
         }
         holder.title.setText(bean.getTitle());
+        final TextView delete= (TextView) view.findViewById(R.id.delete);
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mList.remove(position);
+                notifyDataSetChanged();
+            }
+        });
         bean.lin_root= (LinearLayout) view.findViewById(R.id.lin_root);
         bean.lin_root.scrollTo(0,0);
         return view;
@@ -72,11 +80,6 @@ public class myAdapter extends BaseAdapter{
         }
 
         public String getTitle() {
-            return title;
-        }
-
-        @Override
-        public String toString() {
             return title;
         }
     }

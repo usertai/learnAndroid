@@ -8,12 +8,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.RotateAnimation;
-import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * Created by he on 2016/11/17.
@@ -27,7 +26,7 @@ enum State {
 }
 
 
-public class myListView extends ListView implements AdapterView.OnItemClickListener {
+public class myListView extends ListView  {
     private static final String TAG = "ListView";
 
     private View header;
@@ -47,7 +46,8 @@ public class myListView extends ListView implements AdapterView.OnItemClickListe
     private int Max_Width = 100;//在布局中隐藏的 删除  宽度为100dp
     private int maxLength;
     private Context mContext;
-    private static myAdapter.ItemBean bean;//item的布局
+    private static LinearLayout  lin_root;
+
 
 
     /**
@@ -93,7 +93,6 @@ public class myListView extends ListView implements AdapterView.OnItemClickListe
         headerHeight = header.getMeasuredHeight();//获取高度
         topPadding(-headerHeight);
         this.addHeaderView(header);
-//        this.setOnItemClickListener(this);
     }
 
     /**
@@ -126,13 +125,12 @@ public class myListView extends ListView implements AdapterView.OnItemClickListe
 
                 //下面的代码用于滑动删除
                 int position = pointToPosition(x, y);
-//                getAdapter().getItem(position);
-//                Log.i(TAG, "onTouchEvent: " + position);
-                if (position != INVALID_POSITION) {
-                    bean = (myAdapter.ItemBean) getAdapter().getItem(position);
-                    Log.i(TAG, "onTouchEvent: "+bean.toString());
-                }
+                int firstPosition = getFirstVisiblePosition();
 
+                Log.i(TAG, "onTouchEvent:  position" + position+" firstPosition "+firstPosition);
+                if (position != INVALID_POSITION) {
+                    lin_root = (LinearLayout) getChildAt(position - firstPosition);
+                }
             }
                 break;
             case MotionEvent.ACTION_UP: {
@@ -146,32 +144,29 @@ public class myListView extends ListView implements AdapterView.OnItemClickListe
                     topPadding(-headerHeight);
 
                 //下面的代码用于滑动删除
-                int scrollX = bean.lin_root.getScrollX();
+                int scrollX = lin_root.getScrollX();
                 int newScrollX;
                 if (scrollX > maxLength / 2) {
                     newScrollX = maxLength;
                 } else {
                     newScrollX = 0;
                 }
-//                bean.lin_root.scrollTo(newScrollX, 0);
-                Log.i(TAG, "onTouchEvent: newScrollX "+bean.toString());
-                bean.lin_root.scrollTo(200, 0);
+                  lin_root.scrollTo(newScrollX, 0);
             }
             break;
             case MotionEvent.ACTION_MOVE: {
                 if (top)
                     onMove(ev);
                 //下面的代码用于滑动删除
-                int scrollX = bean.lin_root.getScrollX();
+//                int scrollX = bean.lin_root.getScrollX();
+                int scrollX = lin_root.getScrollX();
                 int newScrollX = scrollX + mLastX - x;
                 if (newScrollX < 0) {
                     newScrollX = 0;
                 } else if (newScrollX > maxLength) {
                     newScrollX = maxLength;
                 }
-//                Log.i(TAG, "onTouchEvent: newScrollX ");
-                bean.lin_root.scrollTo(newScrollX, 0);
-
+                lin_root.scrollTo(newScrollX, 0);
             }
             break;
         }
@@ -256,8 +251,4 @@ public class myListView extends ListView implements AdapterView.OnItemClickListe
         return state;
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(mContext,bean.getTitle(),Toast.LENGTH_SHORT).show();
-    }
 }
