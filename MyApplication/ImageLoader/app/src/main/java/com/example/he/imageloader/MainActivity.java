@@ -3,7 +3,9 @@ package com.example.he.imageloader;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -34,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements AbsListView.OnScr
     private boolean mIsWifi = false;
     private boolean mCanGetBitmapFromNetWork = false;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements AbsListView.OnScr
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void initView() {
         mImageGridView = (GridView) findViewById(R.id.gridView1);
         mImageAdapter = new ImageAdapter(this);
@@ -121,9 +125,10 @@ public class MainActivity extends AppCompatActivity implements AbsListView.OnScr
         private LayoutInflater mInflater;
         private Drawable mDefaultBitmapDrawable;
 
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         private ImageAdapter(Context context) {
             mInflater = LayoutInflater.from(context);
-            mDefaultBitmapDrawable = context.getResources().getDrawable(R.drawable.image_default);
+            mDefaultBitmapDrawable = context.getResources().getDrawable(R.drawable.image_default,null);
         }
 
         @Override
@@ -164,6 +169,7 @@ public class MainActivity extends AppCompatActivity implements AbsListView.OnScr
                 imageView.setTag(uri);
                 //异步加载图片
                 mImageLoader.bindBitmap(uri, imageView, mImageWidth, mImageWidth);
+//                mImageLoader.bindBitmap(uri, imageView, 300, 300);
             }
             return convertView;
         }
