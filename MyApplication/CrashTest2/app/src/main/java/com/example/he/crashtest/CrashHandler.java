@@ -5,6 +5,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Process;
 import android.util.Log;
 
 import java.io.BufferedWriter;
@@ -70,6 +71,17 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         } catch (PackageManager.NameNotFoundException e1) {
             e1.printStackTrace();
         }
+
+        e.printStackTrace();
+
+        //如果系统提供了默认的异常处理器，则交给系统去结束程序，否则就自己结束自己
+        if(mDefaultCrashHadler!=null){
+            mDefaultCrashHadler.uncaughtException(t,e);
+        }else{
+            Process.killProcess(Process.myPid());
+        }
+
+
 
     }
 
