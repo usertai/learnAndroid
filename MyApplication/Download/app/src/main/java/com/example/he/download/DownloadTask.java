@@ -73,8 +73,6 @@ public class DownloadTask extends AsyncTask<String, Integer, Integer> {
         InputStream input = null;
         File file = null;
         RandomAccessFile savedFile = null;
-
-
         try {
             long downloadLength = 0;
             String downloadUrl = params[0];
