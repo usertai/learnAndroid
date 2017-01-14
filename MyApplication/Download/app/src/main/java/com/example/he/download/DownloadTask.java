@@ -91,7 +91,7 @@ public class DownloadTask extends AsyncTask<String, Integer, Integer> {
 
             OkHttpClient client = new OkHttpClient();
             //断点下载，指定从哪个字节开始下载
-            Request request = new Request.Builder().addHeader("RANGE", "bytes=" + downloadLength + "-").url(downloadUrl).build();
+            Request request = new Request.Builder().addHeader("RANGE", "bytes=" + downloadLength + "-").url(downloadUrl).build();//返回的不是完整的，而是已经跳过下载过的字节，即服务端返回的就是未下载的字节
             Response response = client.newCall(request).execute();
             if (response != null) {
                 input = response.body().byteStream();
