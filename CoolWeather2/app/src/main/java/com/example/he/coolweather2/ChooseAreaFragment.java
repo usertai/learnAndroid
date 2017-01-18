@@ -252,6 +252,4 @@ public class ChooseAreaFragment extends Fragment {
         if (progressDialog != null)
             progressDialog.dismiss();
     }
-
-
 }
