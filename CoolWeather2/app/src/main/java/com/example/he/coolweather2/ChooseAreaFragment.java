@@ -1,6 +1,7 @@
 package com.example.he.coolweather2;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -37,7 +38,7 @@ import okhttp3.Response;
  */
 
 public class ChooseAreaFragment extends Fragment {
-    private static final  String TAG="ChooseAreaFragment";
+    private static final String TAG = "ChooseAreaFragment";
 
     private Button backButton;
     private TextView titleText;
@@ -80,12 +81,19 @@ public class ChooseAreaFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(currentLevel==LEVEL_PROVINCE){
-                    selectedProvince=provinceList.get(position);
+                if (currentLevel == LEVEL_PROVINCE) {
+                    selectedProvince = provinceList.get(position);
                     queryCities();
-                }else if(currentLevel==LEVEL_CITY){
-                    selectedCity=cityList.get(position);
+                } else if (currentLevel == LEVEL_CITY) {
+                    selectedCity = cityList.get(position);
                     queryCounties();
+                } else if (currentLevel == LEVEL_COUNTY) {
+                    String weatherId = countyList.get(position).getWeather();
+                    Intent intent = new Intent(getActivity(), activity_weather.class);
+                    intent.putExtra("weather_id", weatherId);
+                    startActivity(intent);
+                    getActivity().finish();
+
                 }
             }
         });
@@ -93,9 +101,9 @@ public class ChooseAreaFragment extends Fragment {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(currentLevel==LEVEL_COUNTY){
+                if (currentLevel == LEVEL_COUNTY) {
                     queryCities();
-                }else if(currentLevel==LEVEL_CITY){
+                } else if (currentLevel == LEVEL_CITY) {
                     querProviences();
                 }
             }
@@ -142,7 +150,7 @@ public class ChooseAreaFragment extends Fragment {
             currentLevel = LEVEL_CITY;
         } else {
             int provinceCode = selectedProvince.getProvinceCode();
-            Log.d(TAG, "queryCities: 1"+provinceCode);
+            Log.d(TAG, "queryCities: 1" + provinceCode);
             String address = "http://guolin.tech/api/china/" + provinceCode;
             queryFromService(address, LEVEL_CITY);
         }
