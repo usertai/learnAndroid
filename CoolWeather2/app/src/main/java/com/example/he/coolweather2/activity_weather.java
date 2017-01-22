@@ -10,6 +10,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -36,11 +37,14 @@ import okhttp3.Response;
  * 显示天气信息的Activity
  */
 public class activity_weather extends AppCompatActivity {
+
+    private static final String TAG = "WeatherActivity";
+
     private ScrollView weatherLayout;
     private Button navButton;
-    private TextView titleCity;
-    private TextView titleUpdateTime;
-    private TextView degreeText;
+    private TextView titleCity;//城市
+    private TextView titleUpdateTime;//更新时间
+    private TextView degreeText;//温度
     private TextView weatherInfoText;
     private LinearLayout forecastLayout;
     private TextView aqiText;
@@ -88,22 +92,21 @@ public class activity_weather extends AppCompatActivity {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String weatherString = prefs.getString("weather", null);
-        final String weatherId;
         if (weatherString != null) {
             Weather weather = Utility.handleWeatherResponse(weatherString);
-            weatherId = weather.basic.weatherId;
+            mWeatherId = weather.basic.weatherId;
             showWeatherInfo(weather);
         } else {
             //无缓冲从服务器中查询天气
-            weatherId = getIntent().getStringExtra("weather_id");
+            mWeatherId = getIntent().getStringExtra("weather_id");
             weatherLayout.setVisibility(View.INVISIBLE);
-            requestWeather(weatherId);
+            requestWeather(mWeatherId);
         }
 
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                requestWeather(weatherId);
+                requestWeather(mWeatherId);
             }
         });
 
@@ -111,6 +114,7 @@ public class activity_weather extends AppCompatActivity {
         //每日一图
         String bingPic = prefs.getString("bing_pic", null);
         if (bingPic != null) {
+            Log.d(TAG, "onCreate: " + bingPic);
             Glide.with(this).load(bingPic).into(bingPicImg);
         } else {
             //从网络中加载图片
@@ -128,6 +132,7 @@ public class activity_weather extends AppCompatActivity {
 
 
     }
+
 
     /**
      * 根据天气id请求城市信息
@@ -169,6 +174,7 @@ public class activity_weather extends AppCompatActivity {
                 });
             }
         });
+        loadImage();
     }
 
     /**
@@ -231,6 +237,7 @@ public class activity_weather extends AppCompatActivity {
                 SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(activity_weather.this).edit();
                 edit.putString("bing_pic", bingPic);
                 edit.apply();
+                Log.d(TAG, "onResponse: " + bingPic);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

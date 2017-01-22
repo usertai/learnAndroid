@@ -80,7 +80,7 @@ public class AutoUpdateService extends Service {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String bingPic=response.body().toString();
+               final String bingPic=response.body().string();
                 SharedPreferences.Editor editor=PreferenceManager.getDefaultSharedPreferences(AutoUpdateService.this).edit();
                 editor.putString("bing_pic",bingPic);
                 editor.apply();
