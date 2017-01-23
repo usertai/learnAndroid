@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
@@ -22,6 +23,11 @@ public class WidgetService extends Service {
     private static final String TAG = "WidgetService";
 
     @Override
+    public void onCreate() {
+        super.onCreate();
+    }
+
+    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "onStartCommand: ");
         updateWidget();
@@ -32,16 +38,23 @@ public class WidgetService extends Service {
         PendingIntent pi = PendingIntent.getService(this, 0, i, 0);
         manager.cancel(pi);
         manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtTime, pi);
-        return super.onStartCommand(intent, flags, startId);
-
+        return START_STICKY_COMPATIBILITY;
     }
 
 
+    //更新桌面小部件的信息
     private void updateWidget() {
         AppWidgetManager manager = AppWidgetManager.getInstance(this);
-        Widget.updateAppWidget(this, manager, 0);
+        ComponentName cn = new ComponentName(getApplicationContext(), Widget.class);
+        Widget.updateAppWidget(this, manager, cn, null);
     }
 
+
+    @Override
+    public void onDestroy() {
+        Intent i = new Intent(this, WidgetService.class);
+        this.startService(i);
+    }
 
     @Nullable
     @Override

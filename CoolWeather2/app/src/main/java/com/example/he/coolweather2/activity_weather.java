@@ -1,5 +1,7 @@
 package com.example.he.coolweather2;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -23,6 +25,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.he.coolweather2.gson.Forecast;
 import com.example.he.coolweather2.gson.Weather;
+import com.example.he.coolweather2.layout.Widget;
 import com.example.he.coolweather2.service.AutoUpdateService;
 import com.example.he.coolweather2.util.HttpUtil;
 import com.example.he.coolweather2.util.Utility;
@@ -36,7 +39,7 @@ import okhttp3.Response;
 /**
  * 显示天气信息的Activity
  */
-public class activity_weather extends AppCompatActivity {
+public class activity_weather extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = "WeatherActivity";
 
@@ -103,12 +106,14 @@ public class activity_weather extends AppCompatActivity {
             requestWeather(mWeatherId);
         }
 
-        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                requestWeather(mWeatherId);
-            }
-        });
+//        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                requestWeather(mWeatherId);
+//            }
+//        });
+
+        swipeRefresh.setOnRefreshListener(this);
 
 
         //每日一图
@@ -129,6 +134,12 @@ public class activity_weather extends AppCompatActivity {
                 drawerLayout.openDrawer(GravityCompat.START);
             }
         });
+
+        //每次启动时都进行刷新
+        if (mWeatherId != null) {
+            Log.d(TAG, "onRefresh :" + mWeatherId);
+            onRefresh();
+        }
 
 
     }
@@ -166,6 +177,16 @@ public class activity_weather extends AppCompatActivity {
                             editor.apply();
                             mWeatherId = weather.basic.weatherId;
                             showWeatherInfo(weather);
+
+                            //widget进行更新
+                            if (Widget.hasWidget) {
+                                AppWidgetManager manager = AppWidgetManager.getInstance(activity_weather.this);
+                                ComponentName cn = new ComponentName(getApplicationContext(), Widget.class);
+                                Widget.updateAppWidget(activity_weather.this, manager, cn, null);
+
+                            }
+
+
                         } else {
                             Toast.makeText(activity_weather.this, "获取天气信息失败", Toast.LENGTH_SHORT).show();
                         }
@@ -249,4 +270,11 @@ public class activity_weather extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onRefresh() {
+        requestWeather(mWeatherId);
+        AppWidgetManager manager = AppWidgetManager.getInstance(this);
+
+
+    }
 }

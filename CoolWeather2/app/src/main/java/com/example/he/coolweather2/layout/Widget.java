@@ -3,6 +3,7 @@ package com.example.he.coolweather2.layout;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,9 +24,14 @@ import com.example.he.coolweather2.util.Utility;
 public class Widget extends AppWidgetProvider {
 
     private static final String TAG = "Widget";
+    public static boolean hasWidget = false;
+
+    private static ComponentName componentName;
+    private static RemoteViews view;
+
 
     /**
-     * 更新桌面小部件
+     * 更新桌面小部件   无用
      *
      * @param context
      * @param appWidgetManager
@@ -44,6 +50,31 @@ public class Widget extends AppWidgetProvider {
         }
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
+
+    /**
+     * 更新桌面小部件  有用
+     *
+     * @param context
+     * @param appWidgetManager
+     * @param cn
+     * @param t
+     */
+    public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, ComponentName cn, String t) {
+
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String weatherString = preferences.getString("weather", null);
+        if (weatherString != null) {
+            final Weather weather = Utility.handleWeatherResponse(weatherString);
+            if (weather != null) {
+                show(weather, views);
+            }
+        }
+        componentName = cn;
+        view = views;
+        appWidgetManager.updateAppWidget(cn, views);
+    }
+
 
     private static void show(Weather weather, RemoteViews views) {
         String degree = weather.now.temperature + "°";
@@ -83,6 +114,7 @@ public class Widget extends AppWidgetProvider {
             views.setOnClickPendingIntent(R.id.widget_image, openWeatherActivity);
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }
+        appWidgetManager.updateAppWidget(componentName, view);
     }
 
     @Override
@@ -90,11 +122,14 @@ public class Widget extends AppWidgetProvider {
         // Enter relevant functionality for when the first widget is created
         Intent intent = new Intent(context, WidgetService.class);
         context.startService(intent);
+        hasWidget = true;
     }
 
     @Override
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
+        hasWidget = false;
+        context.stopService(new Intent(context, WidgetService.class));
     }
 }
 
