@@ -18,7 +18,7 @@ import android.widget.Toast;
  */
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final  String TAG="LoginActivity";
+    private static final String TAG = "LoginActivity";
 
     private EditText userID;
     private EditText password;
@@ -55,14 +55,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.login_button:
-                Log.d(TAG, "userName"+userID.getText().toString()+"  password"+password.toString());
-                if(userID.getText().toString().equals("123456") && password.getText().toString().equals("123456")){
-                    Intent intent=new Intent(this,MainActivity.class);
+                Log.d(TAG, "userName" + userID.getText().toString() + "  password" + password.toString());
+                if (userID.getText().toString().equals("123456") && password.getText().toString().equals("123456")) {
+                    Intent intent = new Intent(this, MainActivity.class);
                     startActivity(intent);
                     //切换动画
-//                    overridePendingTransition();
+                    overridePendingTransition(R.anim.enter_anim, R.anim.exit_anim);
                     this.finish();
-                }else {
+                } else {
                     Toast.makeText(this, "账户或密码错误", Toast.LENGTH_SHORT).show();
                 }
                 break;
