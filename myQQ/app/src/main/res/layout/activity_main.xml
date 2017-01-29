@@ -13,16 +13,71 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:orientation="vertical"
             android:fitsSystemWindows="true"
-            android:orientation="vertical">
+            >
 
             <com.example.he.myqq.UI.TitleLayout
+                android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"></com.example.he.myqq.UI.TitleLayout>
 
+
+            <FrameLayout
+                android:layout_below="@id/title"
+                android:id="@+id/fl"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" >
+            </FrameLayout>
+
+
+
+            <!--底部选项卡-->
+            <RadioGroup
+                android:id="@+id/rg"
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#fff"
+                android:orientation="horizontal"
+                android:gravity="center">
+                
+                <RadioButton
+                    android:id="@+id/rb_1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:button="@null"
+                    android:drawableTop="@drawable/message"
+                    android:text="消息"
+                    />
+                <RadioButton
+                    android:id="@+id/rb_2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:button="@null"
+                    android:drawableTop="@drawable/friends"
+                    android:text="联系人"/>
+
+                <RadioButton
+                    android:id="@+id/rb_3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:button="@null"
+                    android:drawableTop="@drawable/trends"
+                    android:text="动态"/>
+
+            </RadioGroup>
+
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="start"
@@ -30,18 +85,53 @@
             android:orientation="vertical">
 
             <android.support.design.widget.NavigationView
+                android:id="@+id/nav_View"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
                 app:headerLayout="@layout/nav_header"
+                app:menu="@menu/nav_menu"
                 ></android.support.design.widget.NavigationView>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"></LinearLayout>
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal"-->
+                <!--android:layout_alignParentBottom="true"-->
+                <!--android:layout_alignParentLeft="true"-->
+                <!--android:background="#fff"-->
+                <!--android:layout_alignParentStart="true">-->
 
-        </LinearLayout>
+                <!--<ImageView-->
+                    <!--android:layout_width="30dp"-->
+                    <!--android:layout_height="30dp"-->
+                    <!--android:src="@drawable/setting"-->
+                    <!--android:scaleType="center"-->
+                    <!--/>-->
+                <!--<TextView-->
+                    <!--android:layout_width="30dp"-->
+                    <!--android:layout_height="30dp"-->
+                    <!--android:text="设置"-->
+                    <!--android:layout_marginLeft="5dp"-->
+                    <!--android:textColor="@android:color/black"-->
+                    <!--android:gravity="center"/>-->
+
+                <!--<ImageView-->
+                    <!--android:layout_width="30dp"-->
+                    <!--android:layout_height="30dp"-->
+                    <!--android:src="@drawable/night"-->
+                    <!--android:scaleType="center"-->
+                    <!--android:layout_marginLeft="45dp"-->
+                    <!--/>-->
+                <!--<TextView-->
+                    <!--android:layout_width="30dp"-->
+                    <!--android:layout_height="30dp"-->
+                    <!--android:text="夜间"-->
+                    <!--android:textColor="@android:color/black"-->
+                    <!--android:gravity="center"/>-->
+            <!--</LinearLayout>-->
+
+        </RelativeLayout>
 
 
     </android.support.v4.widget.DrawerLayout>

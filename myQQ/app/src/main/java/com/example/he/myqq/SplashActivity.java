@@ -6,6 +6,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 
+import com.example.he.myqq.utils.HideStatusBar;
+
 /**
  * 引导界面
  */

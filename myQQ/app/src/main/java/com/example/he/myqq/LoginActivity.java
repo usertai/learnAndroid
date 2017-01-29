@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.he.myqq.utils.HideStatusBar;
+
 /**
  * 登录界面
  */
