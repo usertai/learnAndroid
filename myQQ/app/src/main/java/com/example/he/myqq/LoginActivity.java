@@ -14,6 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.he.myqq.utils.HideStatusBar;
+import com.example.he.myqq.utils.MyApplication;
+import com.example.he.myqq.utils.SharedPreferrenceHelper;
 
 /**
  * 登录界面
@@ -59,6 +61,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.login_button:
                 Log.d(TAG, "userName" + userID.getText().toString() + "  password" + password.toString());
                 if (userID.getText().toString().equals("123456") && password.getText().toString().equals("123456")) {
+                    //保存密码
+                    SharedPreferrenceHelper.savePassword(MyApplication.getContext(), true);
                     Intent intent = new Intent(this, MainActivity.class);
                     startActivity(intent);
                     //切换动画

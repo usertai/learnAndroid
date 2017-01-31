@@ -1,6 +1,8 @@
 package com.example.he.myqq.Fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -9,9 +11,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,24 +26,30 @@ import com.example.he.myqq.UI.swipelistview.SwipeMenu;
 import com.example.he.myqq.UI.swipelistview.SwipeMenuListView;
 import com.example.he.myqq.utils.MessageBean;
 import com.example.he.myqq.utils.MyApplication;
+import com.example.he.myqq.utils.imageloader.loader.ImageLoader;
+import com.example.he.myqq.utils.imageloader.utils.MyUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
  * Created by he on 2017/1/29.
  */
 
-public class Fragment1 extends Fragment {
+public class Fragment1 extends Fragment implements AbsListView.OnScrollListener{
 
     private List<MessageBean> mAppList;
-
-//    private List<String> mAppList;
-
+    private ImageLoader mImageLoader;
     private AppAdapter mAdapter;
     private PullToRefreshListView ptrlv;
     private Activity mActivity;
     private View mView;
+
+    private boolean mIsListViewIdle = true;
+    private boolean mCanGetBitmapFromNetWork = false;
+    private boolean mIsWifi = false;
 
     private static final int LOAD_UP = 1;
     private static final int LOAD_DOWN = 2;
@@ -75,18 +85,17 @@ public class Fragment1 extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mActivity = getActivity();
         mAppList = new ArrayList<MessageBean>();
-        for (int i = 0; i < 20; i++) {
-            mAppList.add(new MessageBean("你好", "item" + i, "2017-1-30", "xxx"));
-        }
-
-//        mAppList = new ArrayList<String>();
+        mImageLoader=ImageLoader.build(mActivity.getApplicationContext());
 //        for (int i = 0; i < 20; i++) {
-//            mAppList.add("item"+i);
+//            mAppList.add(new MessageBean("你好", "item" + i, "2017-1-30", "xxx"));
 //        }
-
 
         ptrlv = (PullToRefreshListView) mView.findViewById(R.id.listView);
         initListView();
+        initDate();
+        initView();
+        ptrlv.setOnScrollListener(this);//ListView设置滑动监听
+
     }
 
     /**
@@ -176,6 +185,77 @@ public class Fragment1 extends Fragment {
 
     }
 
+    /**
+     * 初始化数据
+     */
+    private void initDate() {
+        String[] imageUrls = {
+                "http://b.hiphotos.baidu.com/zhidao/pic/item/a6efce1b9d16fdfafee0cfb5b68f8c5495ee7bd8.jpg",
+                "http://pic47.nipic.com/20140830/7487939_180041822000_2.jpg",
+                "http://pic41.nipic.com/20140518/4135003_102912523000_2.jpg",
+                "http://img2.imgtn.bdimg.com/it/u=1133260524,1171054226&fm=21&gp=0.jpg",
+                "http://h.hiphotos.baidu.com/image/pic/item/3b87e950352ac65c0f1f6e9efff2b21192138ac0.jpg",
+                "http://pic.58pic.com/58pic/13/00/22/32M58PICV6U.jpg",
+                "http://picview01.baomihua.com/photos/20120629/m_14_634765948339062500_11778706.jpg",
+                "http://h.hiphotos.baidu.com/zhidao/wh%3D450%2C600/sign=429e7b1b92ef76c6d087f32fa826d1cc/7acb0a46f21fbe09cc206a2e69600c338744ad8a.jpg",
+                "http://pica.nipic.com/2007-12-21/2007122115114908_2.jpg",
+                "http://cdn.duitang.com/uploads/item/201405/13/20140513212305_XcKLG.jpeg",
+                "http://photo.loveyd.com/uploads/allimg/080618/1110324.jpg",
+                "http://img4.duitang.com/uploads/item/201404/17/20140417105820_GuEHe.thumb.700_0.jpeg",
+                "http://cdn.duitang.com/uploads/item/201204/21/20120421155228_i52eX.thumb.600_0.jpeg",
+                "http://www.renyugang.cn/emlog/content/plugins/kl_album/upload/201004/852706aad6df6cd839f1211c358f2812201004120651068641.jpg"
+        };
+        int i = 97;
+        for (String url : imageUrls) {
+            Date currentTime = new Date();
+            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+            String time = formatter.format(currentTime);
+            mAppList.add(new MessageBean("你好", "" + (char) i++, time, url));
+        }
+        mIsWifi = MyUtils.isWifi(mActivity.getApplicationContext());
+        if (mIsWifi) {
+            mCanGetBitmapFromNetWork = true;
+        }
+    }
+
+
+    /**
+     * 如果无wifi弹出一个AlterDialog
+     */
+    private void initView() {
+        if (!mIsWifi) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(mActivity.getApplicationContext());
+            builder.setMessage("初次使用会从网络下载大概5MB的图片，确认要下载吗？");
+            builder.setTitle("注意");
+            builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    mCanGetBitmapFromNetWork = true;
+                    mAdapter.notifyDataSetChanged();
+                }
+            });
+            builder.setNegativeButton("否", null);
+            builder.show();
+        }
+    }
+
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        if (scrollState == NumberPicker.OnScrollListener.SCROLL_STATE_IDLE) {
+            mIsListViewIdle = true;
+            mAdapter.notifyDataSetChanged();
+        } else {
+            mIsListViewIdle = false;
+        }
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+    }
+
+
     class AppAdapter extends BaseAdapter {
 
         @Override
@@ -207,18 +287,18 @@ public class Fragment1 extends Fragment {
             }
 
             ImageView imageView = holder.icon;
-
             final String uri = mAppList.get(position).getUri();
             final String tag = (String) imageView.getTag();
-//            if (!uri.equals(tag)) {
-            imageView.setImageResource(R.mipmap.ic_launcher);
-//            }
-//            if (mIsGridViewIdle && mCanGetBitmapFromNetWork) {
-//                imageView.setTag(uri);
-//                //异步加载图片
-//                mImageLoader.bindBitmap(uri, imageView, mImageWidth, mImageWidth);
-////                mImageLoader.bindBitmap(uri, imageView, 300, 300);
-//            }
+            if (!uri.equals(tag)) {
+                imageView.setImageResource(R.mipmap.ic_launcher);
+            }
+            if (mIsListViewIdle && mCanGetBitmapFromNetWork) {
+                imageView.setTag(uri);
+
+                //异步加载图片
+                mImageLoader.bindBitmap(uri, imageView, 100, 100);
+//                mImageLoader.bindBitmap(uri, imageView, 300, 300);
+            }
             holder.name.setText(bean.getName());
             holder.info.setText(bean.getInfo());
             holder.time.setText(bean.getTime());
@@ -239,49 +319,6 @@ public class Fragment1 extends Fragment {
             return mAppList.get(position);
         }
     }
-
-//    class AppAdapter extends BaseAdapter {
-//
-//        @Override
-//        public int getCount() {
-//            return mAppList.size();
-//        }
-//
-//        @Override
-//        public long getItemId(int position) {
-//            return position;
-//        }
-//
-//        @Override
-//        public View getView(int position, View convertView, ViewGroup parent) {
-//            if (convertView == null) {
-//                convertView = View.inflate(mActivity.getApplicationContext(),
-//                        R.layout.item_list_app2, null);
-//                new ViewHolder(convertView);
-//            }
-//            ViewHolder holder = (ViewHolder) convertView.getTag();
-//            holder.tv_name.setText(mAppList.get(position));
-//            holder.iv_icon.setImageResource(R.mipmap.ic_launcher);
-//            return convertView;
-//        }
-//
-//        class ViewHolder {
-//            ImageView iv_icon;
-//            TextView tv_name;
-//
-//            public ViewHolder(View view) {
-//                iv_icon = (ImageView) view.findViewById(R.id.iv_icon);
-//                tv_name = (TextView) view.findViewById(R.id.tv_name);
-//                view.setTag(this);
-//            }
-//        }
-//
-//        @Override
-//        public Object getItem(int position) {
-//            // TODO Auto-generated method stub
-//            return null;
-//        }
-//    }
 
 
 }

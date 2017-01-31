@@ -12,7 +12,7 @@ import com.example.he.myqq.R;
 
 public class SharedPreferrenceHelper {
 
-
+    //设置需要保存的主题
     public static void setTheme(Context context, int resId) {
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
         editor.putInt("theme", resId);
@@ -26,4 +26,23 @@ public class SharedPreferrenceHelper {
         int theme = sp.getInt("theme", R.style.AppTheme);
         return theme;
     }
+
+
+    //保存密码，下次直接登录
+    public static void savePassword(Context context,boolean isSave){
+        SharedPreferences.Editor editor=PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.putBoolean("save",isSave);
+        editor.commit();
+    }
+
+    public static boolean getSaveStatus(Context context){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean t=sp.getBoolean("save",false);
+        return t;
+    }
+
+
+
+
+
 }
