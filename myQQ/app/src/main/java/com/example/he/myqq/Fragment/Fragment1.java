@@ -2,7 +2,8 @@ package com.example.he.myqq.Fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.SystemClock;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import com.example.he.myqq.UI.refreshlistview.PullToRefreshBase;
 import com.example.he.myqq.UI.refreshlistview.PullToRefreshListView;
 import com.example.he.myqq.UI.swipelistview.SwipeMenu;
 import com.example.he.myqq.UI.swipelistview.SwipeMenuListView;
+import com.example.he.myqq.utils.MessageBean;
 import com.example.he.myqq.utils.MyApplication;
 
 import java.util.ArrayList;
@@ -30,16 +32,41 @@ import java.util.List;
 
 public class Fragment1 extends Fragment {
 
-    private List<String> mAppList;
+    private List<MessageBean> mAppList;
+
+//    private List<String> mAppList;
+
     private AppAdapter mAdapter;
     private PullToRefreshListView ptrlv;
     private Activity mActivity;
     private View mView;
 
+    private static final int LOAD_UP = 1;
+    private static final int LOAD_DOWN = 2;
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case LOAD_UP:
+                    loadUpMore();
+                    ptrlv.setOnRefreshComplete();
+                    break;
+                case LOAD_DOWN:
+                    loadBottomMore();
+                    ptrlv.setOnRefreshComplete();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment1_layout, container, false);
-        mView=view;
+        mView = view;
         return view;
     }
 
@@ -47,10 +74,17 @@ public class Fragment1 extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mActivity = getActivity();
-        mAppList = new ArrayList<String>();
+        mAppList = new ArrayList<MessageBean>();
         for (int i = 0; i < 20; i++) {
-            mAppList.add("item " + i);
+            mAppList.add(new MessageBean("你好", "item" + i, "2017-1-30", "xxx"));
         }
+
+//        mAppList = new ArrayList<String>();
+//        for (int i = 0; i < 20; i++) {
+//            mAppList.add("item"+i);
+//        }
+
+
         ptrlv = (PullToRefreshListView) mView.findViewById(R.id.listView);
         initListView();
     }
@@ -72,14 +106,18 @@ public class Fragment1 extends Fragment {
         ptrlv.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<SwipeMenuListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<SwipeMenuListView> refreshView) {
-                loadUpMore();
-                ptrlv.setOnRefreshComplete();
+//                loadUpMore();
+
+                handler.sendEmptyMessageDelayed(LOAD_UP, 2000);
+//                ptrlv.setOnRefreshComplete();
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<SwipeMenuListView> refreshView) {
-                loadBottomMore();
-                ptrlv.setOnRefreshComplete();
+//                loadBottomMore();
+
+                handler.sendEmptyMessageDelayed(LOAD_DOWN, 2000);
+//                ptrlv.setOnRefreshComplete();
             }
         });
 
@@ -102,8 +140,7 @@ public class Fragment1 extends Fragment {
                 mAppList.remove(position);
                 mAdapter.notifyDataSetChanged();
                 Toast.makeText(mActivity.getApplicationContext(), "delete" + position, Toast.LENGTH_SHORT).show();
-
-                return false;
+                return true;
             }
         });
 
@@ -117,9 +154,9 @@ public class Fragment1 extends Fragment {
      * 上拉刷新需要加载加载的数据
      */
     protected void loadUpMore() {
-        SystemClock.sleep(2000);
-        mAppList.add("A");
-        mAppList.add("B");
+//        SystemClock.sleep(2000);
+        mAppList.add(new MessageBean("你好", "zcc", "2002", "xxx"));
+//        mAppList.add("A");
         mAdapter.notifyDataSetChanged();
 
 
@@ -130,7 +167,7 @@ public class Fragment1 extends Fragment {
      */
 
     protected void loadBottomMore() {
-        SystemClock.sleep(2000);
+//        SystemClock.sleep(2000);
 
         /**
          * 根据获取的数据判断，上拉加载是否可用，没有更多数据时可以禁止
@@ -153,34 +190,98 @@ public class Fragment1 extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            View view;
+            ViewHolder holder;
+            MessageBean bean = mAppList.get(position);
             if (convertView == null) {
-                convertView = View.inflate(mActivity.getApplicationContext(),
-                        R.layout.item_list_app, null);
-                new ViewHolder(convertView);
+                view = LayoutInflater.from(mActivity.getApplication()).inflate(R.layout.item_list_app, parent, false);
+                holder = new ViewHolder();
+                holder.icon = (ImageView) view.findViewById(R.id.user_friends_pic);
+                holder.name = (TextView) view.findViewById(R.id.user_friends_name);
+                holder.info = (TextView) view.findViewById(R.id.user_friends_info);
+                holder.time = (TextView) view.findViewById(R.id.user_friends_time);
+                view.setTag(holder);
+            } else {
+                view = convertView;
+                holder = (ViewHolder) view.getTag();
             }
-            ViewHolder holder = (ViewHolder) convertView.getTag();
-//			holder.iv_icon.setImageDrawable(item.loadIcon(getPackageManager()));
-//			holder.tv_name.setText(item.loadLabel(getPackageManager()));
-            holder.tv_name.setText(mAppList.get(position));
-            holder.iv_icon.setImageResource(R.mipmap.ic_launcher);
-            return convertView;
+
+            ImageView imageView = holder.icon;
+
+            final String uri = mAppList.get(position).getUri();
+            final String tag = (String) imageView.getTag();
+//            if (!uri.equals(tag)) {
+            imageView.setImageResource(R.mipmap.ic_launcher);
+//            }
+//            if (mIsGridViewIdle && mCanGetBitmapFromNetWork) {
+//                imageView.setTag(uri);
+//                //异步加载图片
+//                mImageLoader.bindBitmap(uri, imageView, mImageWidth, mImageWidth);
+////                mImageLoader.bindBitmap(uri, imageView, 300, 300);
+//            }
+            holder.name.setText(bean.getName());
+            holder.info.setText(bean.getInfo());
+            holder.time.setText(bean.getTime());
+
+            return view;
         }
 
         class ViewHolder {
-            ImageView iv_icon;
-            TextView tv_name;
+            ImageView icon;
+            TextView name;
+            TextView info;
+            TextView time;
 
-            public ViewHolder(View view) {
-                iv_icon = (ImageView) view.findViewById(R.id.iv_icon);
-                tv_name = (TextView) view.findViewById(R.id.tv_name);
-                view.setTag(this);
-            }
         }
 
         @Override
         public Object getItem(int position) {
-            // TODO Auto-generated method stub
-            return null;
+            return mAppList.get(position);
         }
     }
+
+//    class AppAdapter extends BaseAdapter {
+//
+//        @Override
+//        public int getCount() {
+//            return mAppList.size();
+//        }
+//
+//        @Override
+//        public long getItemId(int position) {
+//            return position;
+//        }
+//
+//        @Override
+//        public View getView(int position, View convertView, ViewGroup parent) {
+//            if (convertView == null) {
+//                convertView = View.inflate(mActivity.getApplicationContext(),
+//                        R.layout.item_list_app2, null);
+//                new ViewHolder(convertView);
+//            }
+//            ViewHolder holder = (ViewHolder) convertView.getTag();
+//            holder.tv_name.setText(mAppList.get(position));
+//            holder.iv_icon.setImageResource(R.mipmap.ic_launcher);
+//            return convertView;
+//        }
+//
+//        class ViewHolder {
+//            ImageView iv_icon;
+//            TextView tv_name;
+//
+//            public ViewHolder(View view) {
+//                iv_icon = (ImageView) view.findViewById(R.id.iv_icon);
+//                tv_name = (TextView) view.findViewById(R.id.tv_name);
+//                view.setTag(this);
+//            }
+//        }
+//
+//        @Override
+//        public Object getItem(int position) {
+//            // TODO Auto-generated method stub
+//            return null;
+//        }
+//    }
+
+
 }

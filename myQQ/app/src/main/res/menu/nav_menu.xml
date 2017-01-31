@@ -26,6 +26,9 @@
             android:id="@+id/file"
             android:icon="@drawable/file"
             android:title="我的文件" />
+        <item android:id="@+id/night"
+              android:title="夜间模式"
+            android:icon="@drawable/night"/>
 
     </group>
 </menu>
