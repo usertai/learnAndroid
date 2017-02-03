@@ -54,6 +54,8 @@ public class Fragment1 extends Fragment implements AbsListView.OnScrollListener{
     private static final int LOAD_UP = 1;
     private static final int LOAD_DOWN = 2;
 
+
+
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
