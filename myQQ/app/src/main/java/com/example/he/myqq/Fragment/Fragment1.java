@@ -3,6 +3,7 @@ package com.example.he.myqq.Fragment;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -26,6 +27,7 @@ import com.example.he.myqq.UI.swipelistview.SwipeMenu;
 import com.example.he.myqq.UI.swipelistview.SwipeMenuListView;
 import com.example.he.myqq.utils.MessageBean;
 import com.example.he.myqq.utils.MyApplication;
+import com.example.he.myqq.NewsMessageActivity;
 import com.example.he.myqq.utils.imageloader.loader.ImageLoader;
 import com.example.he.myqq.utils.imageloader.utils.MyUtils;
 
@@ -38,7 +40,7 @@ import java.util.List;
  * Created by he on 2017/1/29.
  */
 
-public class Fragment1 extends Fragment implements AbsListView.OnScrollListener{
+public class Fragment1 extends Fragment implements AbsListView.OnScrollListener {
 
     private List<MessageBean> mAppList;
     private ImageLoader mImageLoader;
@@ -53,7 +55,6 @@ public class Fragment1 extends Fragment implements AbsListView.OnScrollListener{
 
     private static final int LOAD_UP = 1;
     private static final int LOAD_DOWN = 2;
-
 
 
     private Handler handler = new Handler() {
@@ -87,7 +88,7 @@ public class Fragment1 extends Fragment implements AbsListView.OnScrollListener{
         super.onActivityCreated(savedInstanceState);
         mActivity = getActivity();
         mAppList = new ArrayList<MessageBean>();
-        mImageLoader=ImageLoader.build(mActivity.getApplicationContext());
+        mImageLoader = ImageLoader.build(mActivity.getApplicationContext());
 //        for (int i = 0; i < 20; i++) {
 //            mAppList.add(new MessageBean("你好", "item" + i, "2017-1-30", "xxx"));
 //        }
@@ -95,8 +96,16 @@ public class Fragment1 extends Fragment implements AbsListView.OnScrollListener{
         ptrlv = (PullToRefreshListView) mView.findViewById(R.id.listView);
         initListView();
         initDate();
-        initView();
+//        initView();
         ptrlv.setOnScrollListener(this);//ListView设置滑动监听
+
+    }
+
+
+    @Override
+    public void onResume() {
+        initView();
+        super.onResume();
 
     }
 
@@ -138,7 +147,8 @@ public class Fragment1 extends Fragment implements AbsListView.OnScrollListener{
         ptrlv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(mActivity.getApplicationContext(), "条目" + position + "被点击了", Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(mActivity, NewsMessageActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -226,7 +236,8 @@ public class Fragment1 extends Fragment implements AbsListView.OnScrollListener{
      */
     private void initView() {
         if (!mIsWifi) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(mActivity.getApplicationContext());
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
             builder.setMessage("初次使用会从网络下载大概5MB的图片，确认要下载吗？");
             builder.setTitle("注意");
             builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
@@ -238,6 +249,12 @@ public class Fragment1 extends Fragment implements AbsListView.OnScrollListener{
             });
             builder.setNegativeButton("否", null);
             builder.show();
+
+//            DialogFragment dialogFragment=new DialogFragment();
+//            dialogFragment.
+
+
+
         }
     }
 

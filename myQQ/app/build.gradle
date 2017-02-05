@@ -4,6 +4,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
+    useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.example.he.myqq"
         minSdkVersion 15
@@ -31,4 +32,12 @@ dependencies {
     //noinspection GradleCompatible
     compile 'com.android.support:design:24.2.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
+    //插件依赖
+    compile 'com.jakewharton:butterknife:7.0.1'
+
+    //环信依赖
+    //Optional compile for GCM (Google Cloud Messaging).
+    compile 'com.google.android.gms:play-services-gcm:9.4.0'
+    compile 'com.hyphenate:hyphenate-sdk:3.2.3'
+
 }
