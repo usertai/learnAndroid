@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -28,6 +29,8 @@ public class TitleLayout extends LinearLayout {
 
     private View mView;
     private Bitmap bitmap;
+    private int mWidth;//屏幕宽
+    private int mHeight;//屏幕高
 
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
@@ -35,6 +38,10 @@ public class TitleLayout extends LinearLayout {
         super(context, attrs);
         mView = LayoutInflater.from(context).inflate(R.layout.title, this);
         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bj);
+        DisplayMetrics metrics =MyUtils.getScreenMetrics(context);
+        mWidth=metrics.widthPixels;
+
+
 //        Drawable drawable = new BitmapDrawable(null, sacleBitmap(bitmap, 0.5f));
 //        mView.setBackground(drawable);
 //        startAnimator();
@@ -44,7 +51,7 @@ public class TitleLayout extends LinearLayout {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 startAnimator();
-                preforAnimate(bitmap.getWidth()/2,bitmap.getWidth()/4);
+                preforAnimate(mWidth,mWidth/2);
                 return false;
             }
         });
@@ -52,22 +59,22 @@ public class TitleLayout extends LinearLayout {
     }
 
 
-    private void startAnimator() {
+    public   void startAnimator() {
         ObjectAnimator animator = ObjectAnimator.ofFloat(mView, "scaleX", 1f, 0.8f);
         animator.setDuration(5000);
+//        preforAnimate(mWidth,mWidth/2);
+        Log.d(TAG, "startAnimator: ");
         animator.start();
     }
 
     private Bitmap sacleBitmap(Bitmap bitmap, int requestWidth) {
-//        Bitmap bitmap= BitmapFactory.decodeResource(getResources(),resId);
         int height = bitmap.getHeight();
         int width = bitmap.getWidth();
-//        int requestHeight= (int) (height*(1f-fraction));
-        return Bitmap.createBitmap(bitmap, requestWidth/2, 0, requestWidth, height);
+        return Bitmap.createBitmap(bitmap, width/2-requestWidth/2, 0, requestWidth,height/2);
     }
 
 
-    private void preforAnimate(final int start, final int end) {
+    public void preforAnimate(final int start, final int end) {
         ValueAnimator valueAnimator = ValueAnimator.ofInt(1, 100);
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             private IntEvaluator evaluator = new IntEvaluator();
