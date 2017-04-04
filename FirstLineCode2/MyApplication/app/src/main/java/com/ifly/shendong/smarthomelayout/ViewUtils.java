@@ -32,7 +32,6 @@ public class ViewUtils {
 
     private static PackageManager pm;
     private static Context mContext;
-    private static View mBaseView;
     private ImageView image;
 
     private List<String> titleList;
@@ -40,16 +39,18 @@ public class ViewUtils {
 
 
     private GridView mGridView;
-
+    private GridView mDeviceManage;
 
     public View initSmartHome(final Context context, @NonNull Map<String, List<String[]>> datas) {
         mContext = context;
         mDatas = datas;
         pm = context.getPackageManager();
         View view = LayoutInflater.from(context).inflate(R.layout.smart_base_layout, null, false);
+
         mGridView = (GridView) view.findViewById(R.id.grid_view);
-        mBaseView = view;
-//        image = (ImageView) view.findViewById(R.id.more);
+        image = (ImageView) view.findViewById(R.id.more);
+        mDeviceManage= (GridView) view.findViewById(R.id.device_manage);
+
         initTitle(view, datas.keySet());
         return view;
     }
@@ -148,29 +149,29 @@ public class ViewUtils {
 
         //更新场景模式
         if (position == 0) {
-            initScene(mBaseView, mDatas.get(titleList.get(position)));
+            initScene( mDatas.get(titleList.get(position)));
         }
         //更新设备管理
         else if (position == titleList.size() - 1) {
-            initDevice(mBaseView, mDatas.get(titleList.get(position)));
+            initDevice( mDatas.get(titleList.get(position)));
         } else {
-            initRom(mBaseView, mDatas.get(titleList.get(position)));
+            initRom( mDatas.get(titleList.get(position)));
         }
 
     }
 
 
-    private void initScene(View view, List<String[]> sceneDatasList) {
+    private void initScene( List<String[]> sceneDatasList) {
         final View[] preView = {null};
-//        mGridView.removeAllViews();
+        mDeviceManage.setVisibility(View.GONE);
         mGridView.setAdapter(null);
         final MySceneAdapter adapter = new MySceneAdapter(sceneDatasList);
         mGridView.setAdapter(adapter);
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                Toast.makeText(parent.getContext(), "点击了", Toast.LENGTH_SHORT).show();
+                //position 
+                Toast.makeText(parent.getContext(), "点击了"+position, Toast.LENGTH_SHORT).show();
                 view.startAnimation(AnimationUtils.loadAnimation(parent.getContext(), R.anim.select_anim));
                 if (preView[0] != null) {
                     preView[0].startAnimation(AnimationUtils.loadAnimation(parent.getContext(), R.anim.unselect_anim));
@@ -194,9 +195,9 @@ public class ViewUtils {
 
     }
 
-    private void initRom(View view, List<String[]> romDatasList) {
+    private void initRom(List<String[]> romDatasList) {
         final View[] preView = {null};
-//        mGridView.removeAllViews();
+        mDeviceManage.setVisibility(View.GONE);
         mGridView.setAdapter(null);
         final MyRomAdapter adapter = new MyRomAdapter(romDatasList);
         mGridView.setAdapter(adapter);
@@ -217,14 +218,13 @@ public class ViewUtils {
 
     }
 
-    private void initDevice(View view, List<String[]> deviceDatasList) {
+    private void initDevice(List<String[]> deviceDatasList) {
         final View[] preView = {null};
-//        mGridView.removeAllViews();
         mGridView.setAdapter(null);
-
+        mDeviceManage.setVisibility(View.VISIBLE);
         final MyDeviceAdapter adapter = new MyDeviceAdapter(deviceDatasList);
-        mGridView.setAdapter(adapter);
-        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mDeviceManage.setAdapter(adapter);
+        mDeviceManage.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
@@ -239,29 +239,6 @@ public class ViewUtils {
         });
     }
 
-
-//    private String getAppName(String packName) {
-//        try {
-//            ApplicationInfo info = pm.getApplicationInfo(packName, 0);
-//            return info.loadLabel(pm).toString();
-//        } catch (PackageManager.NameNotFoundException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-//
-//    private Drawable getAppIcon(String packName) {
-//        try {
-//            ApplicationInfo info = pm.getApplicationInfo(packName, 0);
-//            return info.loadIcon(pm);
-//        } catch (PackageManager.NameNotFoundException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//
-//        }
-//        return null;
-//    }
 }
 
 
