@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
                 frameLayout.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        //加载数据完成后调用
                         frameLayout.refreshComplete();
                         //mPtrFrame.autoRefresh();//自动刷新
                     }
