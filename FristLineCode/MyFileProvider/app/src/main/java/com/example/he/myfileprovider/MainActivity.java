@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         Intent resultIntent = new Intent();
         resultIntent.setAction("com.example.myapp.ACTION_RETURN_FILE");
         resultIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);//为文件授予临时被访问权限
-        fileURI = FileProvider.getUriForFile(this, "com.example.he.myfileprovider.fileprovider", image);
+        fileURI = FileProvider.getUriForFile(MainActivity.this, "com.example.he.myfileprovider.fileprovider", image);
         resultIntent.setDataAndType(
                 fileURI,
                 getContentResolver().getType(fileURI));
