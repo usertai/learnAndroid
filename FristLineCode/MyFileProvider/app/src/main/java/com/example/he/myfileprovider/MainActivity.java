@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -19,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
     private File mInteriorRootDir;
     private static  final String  TAG=MainActivity.class.getSimpleName();
     private Bitmap imageBitmap;
+    private File image;//需要返回的图片
+    private Uri fileURI;//图片的uri
 
 
     @Override
@@ -34,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
                 imageDir.mkdirs();
             }
 
-            File image=new File(imageDir.getAbsolutePath(),"default_image.png");
+            image=new File(imageDir.getAbsolutePath(),"default_image.png");
             FileOutputStream imageStream=null;
             try {
                 imageStream=new FileOutputStream(image);
@@ -42,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
                 imageStream.flush();
                 imageStream.close();
                 Log.d(TAG,"保存成功");
-                
+
                 //将图片插入系统图库
                 try {
                     MediaStore.Images.Media.insertImage(getContentResolver(),
@@ -59,8 +62,21 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-
-        Log.d(TAG, "onCreate: "+mInteriorRootDir.getAbsolutePath());
+        
+        result();
 
     }
+
+    //响应客户端的选择
+    private  void  result(){
+        Intent resultIntent=new Intent();
+        resultIntent.setAction("com.example.myapp.ACTION_RETURN_FILE");
+        resultIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);//为文件授予临时被访问权限
+        fileURI= FileProvider.getUriForFile(this,"com.example.he.myfileprovider.fileprovider",image);
+        setResult(RESULT_OK,resultIntent);
+    }
+
+
+
+
 }

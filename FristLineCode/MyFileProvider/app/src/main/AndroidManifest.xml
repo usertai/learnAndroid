@@ -21,6 +21,19 @@
             </intent-filter>
         </activity>
 
+        
+        <provider
+            android:authorities="com.example.he.myfileprovider.fileprovider"
+            android:name="android.support.v4.content.FileProvider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths"/>
+
+
+
+        </provider>
+        
 
 
 
