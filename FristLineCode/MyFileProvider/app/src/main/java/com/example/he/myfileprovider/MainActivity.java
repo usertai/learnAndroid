@@ -18,7 +18,7 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity {
 
     private File mInteriorRootDir;
-    private static  final String  TAG=MainActivity.class.getSimpleName();
+    private static final String TAG = MainActivity.class.getSimpleName();
     private Bitmap imageBitmap;
     private File image;//需要返回的图片
     private Uri fileURI;//图片的uri
@@ -28,23 +28,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        imageBitmap= BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher);
-        mInteriorRootDir=getFilesDir();
+        imageBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+        mInteriorRootDir = getFilesDir();
 
-        if (mInteriorRootDir.canWrite()){
-            File imageDir=new File(mInteriorRootDir.getAbsolutePath(),"images");
-            if (!imageDir.exists()){
+        if (mInteriorRootDir.canWrite()) {
+            File imageDir = new File(mInteriorRootDir.getAbsolutePath(), "images");
+            if (!imageDir.exists()) {
                 imageDir.mkdirs();
             }
 
-            image=new File(imageDir.getAbsolutePath(),"default_image.png");
-            FileOutputStream imageStream=null;
+            image = new File(imageDir.getAbsolutePath(), "default_image.png");
+            FileOutputStream imageStream = null;
             try {
-                imageStream=new FileOutputStream(image);
-                imageBitmap.compress(Bitmap.CompressFormat.PNG,100,imageStream);
+                imageStream = new FileOutputStream(image);
+                imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, imageStream);
                 imageStream.flush();
                 imageStream.close();
-                Log.d(TAG,"保存成功");
+                Log.d(TAG, "保存成功");
 
                 //将图片插入系统图库
                 try {
@@ -62,21 +62,20 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-        
+
         result();
 
     }
 
     //响应客户端的选择
-    private  void  result(){
-        Intent resultIntent=new Intent();
+    private void result() {
+        Intent resultIntent = new Intent();
         resultIntent.setAction("com.example.myapp.ACTION_RETURN_FILE");
         resultIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);//为文件授予临时被访问权限
-        fileURI= FileProvider.getUriForFile(this,"com.example.he.myfileprovider.fileprovider",image);
-        setResult(RESULT_OK,resultIntent);
+        fileURI = FileProvider.getUriForFile(this, "com.example.he.myfileprovider.fileprovider", image);
+        resultIntent.setDataAndType(
+                fileURI,
+                getContentResolver().getType(fileURI));
+        setResult(RESULT_OK, resultIntent);
     }
-
-
-
-
 }
