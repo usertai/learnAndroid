@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
 class MyGLSurfaceView extends GLSurfaceView {
 
-    private Renderer mRenderer;
+    private MyRenderer mRenderer;
     //投影矩阵
     // mMVPMatrix is an abbreviation for "Model View Projection Matrix"
     private final float[] mMVPMatrix = new float[16];
@@ -58,14 +58,47 @@ class MyGLSurfaceView extends GLSurfaceView {
         setRenderer(mRenderer);
 
         //如果选用这一配置选项，那么除非调用了requestRender()，否则GLSurfaceView不会被重新绘制，这样做可以让应用的性能及效率得到提高。
-
-//        setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);//仅在你的绘制数据发生变化时才在视图中进行绘制操作
+        setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);//仅在你的绘制数据发生变化时才在视图中进行绘制操作
     }
 
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        return super.onTouchEvent(event);
+    public boolean onTouchEvent(MotionEvent e) {
+        // MotionEvent reports input details from the touch screen
+        // and other input controls. In this case, you are only
+        // interested in events where the touch position changed.
+
+        float x = e.getX();
+        float y = e.getY();
+
+        switch (e.getAction()) {
+            case MotionEvent.ACTION_MOVE:
+
+                float dx = x - mPreviousX;
+                float dy = y - mPreviousY;
+
+                // reverse direction of rotation above the mid-line
+                if (y > getHeight() / 2) {
+                    dx = dx * -1 ;
+                }
+
+                // reverse direction of rotation to left of the mid-line
+                if (x < getWidth() / 2) {
+                    dy = dy * -1 ;
+                }
+
+                mRenderer.setAngle(
+                        mRenderer.getAngle() +
+                                ((dx + dy) * TOUCH_SCALE_FACTOR));
+
+
+                requestRender();
+
+        }
+
+        mPreviousX = x;
+        mPreviousY = y;
+        return true;
     }
 
     //自定义渲染类,执行与绘制相关的工作
@@ -74,6 +107,19 @@ class MyGLSurfaceView extends GLSurfaceView {
         private Triangle mTriangle;
         private Square   mSquare;
         private float[] mRotationMatrix = new float[16];
+        public volatile float mAngle;//公开旋转角度
+
+
+
+
+        public float getAngle() {
+            return mAngle;
+        }
+
+        public void setAngle(float angle) {
+            mAngle = angle;
+        }
+
 
 
         @Override
@@ -115,7 +161,9 @@ class MyGLSurfaceView extends GLSurfaceView {
             // Create a rotation transformation for the triangle
             long time = SystemClock.uptimeMillis() % 4000L;
             float angle = 0.090f * ((int) time);
-            Matrix.setRotateM(mRotationMatrix, 0, angle, 0, 0, -1.0f);
+
+            //应用公开的旋转角度
+            Matrix.setRotateM(mRotationMatrix, 0, mAngle, 0, 0, -1.0f);
 
             // Combine the rotation matrix with the projection and camera view
             // Note that the mMVPMatrix factor *must be first* in order
