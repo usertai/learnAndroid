@@ -13,10 +13,12 @@ import java.util.List;
 public class MyViewPagerAdapter extends PagerAdapter {
 
     private List<View> mList;
+    private ViewGroup parent;
 
     public MyViewPagerAdapter(List<View> mList) {
         this.mList = mList;
     }
+
 
     @Override
     public int getCount() {
@@ -35,7 +37,13 @@ public class MyViewPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
+        parent=container;
         container.addView(mList.get(position));
         return mList.get(position);
     }
+
+
+
+
+
 }
