@@ -23,10 +23,9 @@ public class MyViewPager extends ViewPager {
     @Override
     protected int getChildDrawingOrder(int childCount, int i) {
         position = getCurrentItem();
+
         if(position<0){
-
             return i;
-
         }else{
 
             if(i == childCount - 1){//这是最后一个需要刷新的item
@@ -42,17 +41,11 @@ public class MyViewPager extends ViewPager {
             }
 
             if(i == position){//这是原本要在最后一个刷新的item
-
-//                return childCount - 1;
-                return position;
-
+                return childCount - 1;
             }
 
         }
 
         return i;
-
-
-
     }
 }

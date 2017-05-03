@@ -1,6 +1,5 @@
 package com.example.he.viewpagergallery;
 
-import android.graphics.Camera;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -34,7 +33,9 @@ public class MainActivity extends AppCompatActivity {
         viewList = new ArrayList<>();
 
         init();
-        mViewPager.setOffscreenPageLimit(5);
+        //必须要大于page中数,因为重写了viewpager的方法
+        mViewPager.setOffscreenPageLimit(10);
+
 //        pagerWidth = (int) (getResources().getDisplayMetrics().widthPixels * 3.0f / 5.0f);
 //        ViewGroup.LayoutParams lp = mViewPager.getLayoutParams();
 //        if (lp == null) {
@@ -45,8 +46,6 @@ public class MainActivity extends AppCompatActivity {
 //        mViewPager.setLayoutParams(lp);
         Log.d(TAG, "onCreate: " + mViewPager.getPageMargin());
         mViewPager.setPageMargin(-120);
-
-
         adapter = new MyViewPagerAdapter(viewList);
         mViewPager.setAdapter(adapter);
 //        mViewPager.setCurrentItem(viewList.size()/2);
@@ -87,6 +86,17 @@ public class MainActivity extends AppCompatActivity {
         im5.setScaleType(ImageView.ScaleType.FIT_XY);
         viewList.add(im5);
 
+        ImageView im6 = new ImageView(this);
+        Glide.with(this).load(R.drawable.a5).into(im6);
+        im6.setScaleType(ImageView.ScaleType.FIT_XY);
+        viewList.add(im6);
+
+        ImageView im7 = new ImageView(this);
+        Glide.with(this).load(R.drawable.a5).into(im7);
+        im7.setScaleType(ImageView.ScaleType.FIT_XY);
+        viewList.add(im7);
+
+
     }
 
 
@@ -95,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
         private static final float MIN_SCALE = 0.85f;
         private static final float MIN_ALPHA = 0.5f;
         private static final float MAX_ROTATE = 30;
-        private Camera camera = new Camera();
 
         @Override
         public void transformPage(View page, float position) {
@@ -103,31 +112,19 @@ public class MainActivity extends AppCompatActivity {
             float rotate = 20 * Math.abs(position);
 
             if (position <= -1) {
-                page.setScaleX(0.5f);
-                page.setScaleY(0.5f);
-//            page.startAnimation(AnimationUtils.loadAnimation(MainActivity.this,R.anim.translation));
-
             } else if (position < 0) {
                 page.setScaleX(scaleFactor);
                 page.setScaleY(scaleFactor);
-//                page.setTranslationX(200);
 //                page.setRotationY(rotate);
             } else if (position > 0 && position < 1) {
                 page.setScaleX(scaleFactor);
                 page.setScaleY(scaleFactor);
 //                page.setRotationY(-rotate);
-//                page.setTranslationX(-1 * 200);
             } else if (position >= 1) {
                 page.setScaleX(scaleFactor);
                 page.setScaleY(scaleFactor);
 //                page.setRotationY(-rotate);
-//                page.setTranslationX(-1 * 200);
             }
-//            if (position==0){
-//                Log.d(TAG, "transformPage: "+page.hashCode());
-//                mViewPager.bringChildToFront(page);
-////                page.bringToFront();
-//            }
         }
     }
 

@@ -18,8 +18,8 @@
 
     <com.example.he.viewpagergallery.MyViewPager
         android:id="@+id/view_pager"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
+        android:layout_width="200dp"
+        android:layout_height="100dp"
         android:clipChildren="false"
         android:layout_gravity="center_horizontal"
         ></com.example.he.viewpagergallery.MyViewPager>
