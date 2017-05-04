@@ -56,8 +56,9 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
             //TODO
             //1、连接到一个服务器
-            //2、下载和上传数据
+            //2、下载和上传数据，如果我们想要从服务器下载数据并将它存储到 Content Provider 中，我们必须提供请求数据，
+        //                     下载数据和将数据插入到 Provider 中的代码。
             //3、处理数据冲突或者确定当前数据的状态
-            //4、清理
+            //4、清理，关闭网络连接，清除临时文件和缓存。
     }
 }
