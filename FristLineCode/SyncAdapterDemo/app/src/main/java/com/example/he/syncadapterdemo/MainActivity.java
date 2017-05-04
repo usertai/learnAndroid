@@ -2,6 +2,7 @@ package com.example.he.syncadapterdemo;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,15 +16,44 @@ public class MainActivity extends AppCompatActivity {
     // An account type, in the form of a domain name
     public static final String ACCOUNT_TYPE = "example.com";
     // The account name
-    public static final String ACCOUNT = "Zcc";
+    public static final String ACCOUNT = "default_account";
     // Instance fields
     Account mAccount;
+
+
+    /**
+     * 定期运行SyncAdapter
+     *
+     */
+
+    // Sync interval constants
+    public static final long SECONDS_PER_MINUTE = 60L;
+    public static final long SYNC_INTERVAL_IN_MINUTES = 60L;
+    public static final long SYNC_INTERVAL =
+            SYNC_INTERVAL_IN_MINUTES *
+                    SECONDS_PER_MINUTE;
+    // Global variables
+    // A content resolver for accessing the provider
+    ContentResolver mResolver;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mAccount = CreateSyncAccount(this);
+
+        // Get the content resolver for your app
+        mResolver = getContentResolver();
+         /*
+         * Turn on periodic syncing
+         */
+        ContentResolver.addPeriodicSync(
+                mAccount,
+                AUTHORITY,
+                Bundle.EMPTY,
+                SYNC_INTERVAL);
+
     }
 
 
