@@ -14,7 +14,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SecondAcitvity"></activity>
-    </application>
+        <activity
+            android:name=".SecondAcitvity"
+            android:windowSoftInputMode="stateVisible|adjustResize">
+    </activity>
+</application>
 
-</manifest>
+    </manifest>

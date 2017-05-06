@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_second_acitvity"
     android:layout_width="match_parent"
@@ -7,4 +7,13 @@
     android:orientation="vertical"
     tools:context="com.example.he.materialdemo.SecondAcitvity">
 
-</LinearLayout>
+
+    <EditText
+        android:id="@+id/edt"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:hint="输入文本"
+        android:layout_height="wrap_content"
+        android:imeOptions="actionGo"/>
+
+</RelativeLayout>
