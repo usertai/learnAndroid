@@ -11,6 +11,7 @@
     tools:context="com.example.he.materialdemo.MainActivity">
 
     <TextView
+        android:id="@+id/t"
         android:layout_width="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_height="wrap_content"
