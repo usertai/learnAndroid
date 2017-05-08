@@ -105,7 +105,7 @@ public interface IBookManager extends IInterface {
                     reply.recycle();
                     data.recycle();
                 }
-                
+
                 return  result;
             }
 
