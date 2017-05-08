@@ -10,10 +10,10 @@
 
     <EditText
         android:id="@+id/edt"
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:hint="输入文本"
         android:layout_height="wrap_content"
-        android:imeOptions="actionGo"/>
+        android:layout_alignParentBottom="true"
+        android:hint="输入文本"
+        android:imeOptions="actionGo" />
 
 </RelativeLayout>

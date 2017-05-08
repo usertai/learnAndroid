@@ -34,7 +34,6 @@ public class MainActivity extends Activity  implements GestureDetector.OnGesture
         getWindow().setStatusBarColor(Color.TRANSPARENT);
         getWindow().getDecorView().setSystemUiVisibility(uiOptions);
 
-
         mGestureDetector=new GestureDetectorCompat(this,this);
         mGestureDetector.setOnDoubleTapListener(this);
 
@@ -75,6 +74,14 @@ public class MainActivity extends Activity  implements GestureDetector.OnGesture
 
     }
 
+    /**
+     * UI组件隐藏后调到该方法
+     * @param level
+     */
+    @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
+    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
