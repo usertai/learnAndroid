@@ -9,14 +9,9 @@ import com.example.he.superadapter.ViewHolder;
 
 public interface ItemViewDelegate<T> {
 
-    /**
-     * item 对应的layoutId
-     * @return
-     */
     int getItemViewLayoutId();
 
-
-    boolean isForView(T item, int position);
+    boolean isForViewType(T item, int position);
 
     void convert(ViewHolder holder, T t, int position);
 }
