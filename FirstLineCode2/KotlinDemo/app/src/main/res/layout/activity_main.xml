@@ -22,6 +22,13 @@
         android:layout_height="wrap_content"
         android:text="Go"
         android:gravity="center"/>
+    <TextView
+        android:layout_below="@id/go"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="这是第一个界面"/>
+
 
 
 </RelativeLayout>

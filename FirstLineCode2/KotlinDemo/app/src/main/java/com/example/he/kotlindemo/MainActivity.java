@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         KotlinClass kotlinClass=new KotlinClass();
         int sum=kotlinClass.sum(10,60);
         textV= (TextView) findViewById(R.id.text_);
-        textV.setText(sum);
+        textV.setText(""+sum);
 
         go= (Button) findViewById(R.id.go);
         go.setOnClickListener(new View.OnClickListener() {

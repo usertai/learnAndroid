@@ -10,4 +10,10 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.he.kotlindemo.ThirdActivity">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="这是第三个界面" />
+
 </RelativeLayout>

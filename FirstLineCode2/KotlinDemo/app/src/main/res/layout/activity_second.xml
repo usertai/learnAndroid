@@ -17,5 +17,11 @@
         android:layout_below="@id/text_"
         android:gravity="center"
         android:text="Go" />
+    <TextView
+        android:layout_below="@id/go"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="这是第二个界面"/>
 
 </RelativeLayout>
